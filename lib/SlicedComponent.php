@@ -5,27 +5,18 @@ namespace pte;
 class SlicedComponent
 {
 
-    /**
-     * @var ISlicedComponent
-     */
-    var $InterfaceSlicer;
+    public $StartPosition;
+    public $Position;
+    public $EndPosition;
+    public $Length;
+    public $Raw;
 
-    var $StartPosition;
-    var $Position;
-    var $EndPosition;
-    var $Length;
-    var $Raw;
+    public $Parameter;
+    public $Flag;
+    public $Child;
 
-    var $Parameter;
-    var $Flag;
-    var $Child;
-
-    /**
-     * @param ISlicedComponent $InterfaceSlicer
-     */
-    public function __construct(ISlicedComponent $InterfaceSlicer)
+    public function __construct()
     {
-        $this->InterfaceSlicer = $InterfaceSlicer;
     }
 
 }

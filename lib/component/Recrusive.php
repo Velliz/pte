@@ -1,5 +1,5 @@
 <?php
-namespace pte\component;
+namespace pte\Component;
 
 use pte\ISlicedComponent;
 use pte\SlicedComponent;
@@ -7,4 +7,13 @@ use pte\SlicedComponent;
 class Recrusive extends SlicedComponent implements ISlicedComponent
 {
 
+    public function SetValue($FruitSegments)
+    {
+        // TODO: Implement SetValue() method.
+    }
+
+    public function GetValue()
+    {
+        // TODO: Implement GetValue() method.
+    }
 }

@@ -1,8 +1,8 @@
 <?php
 namespace pte;
 
-use pte\utility\PregOffsetCapture;
-
+use pte\Component\Constants;
+use pte\Utility\PregOffsetCapture;
 
 /**
  * Class Slicer
@@ -27,12 +27,16 @@ class Slicer implements ISlicer
      */
     protected $SlicedComponent;
 
+    /**
+     * Slicer constructor.
+     * @param Fruits $Fruit
+     */
     public function __construct(Fruits $Fruit)
     {
         $this->Fruit = $Fruit;
     }
 
-    public function Slices()
+    public function Slices(Baskets $BasketsObject)
     {
         $SliceBegin = 0;
         $SliceEnd = 0;
@@ -59,15 +63,28 @@ class Slicer implements ISlicer
             $SliceLength = ($SliceEnd - $SliceBegin);
 
             if ($Increment === 0) {
-                echo (substr($this->Fruit->GetFruitPack(), $StartPosition, ($SliceBegin - $StartPosition)));
+
+                $FruitSegments = (substr($this->Fruit->GetFruitPack(), $StartPosition, ($SliceBegin - $StartPosition)));
+
+                $Component = new Constants();
+                $Component->SetValue($FruitSegments);
+                $Component->Length = ($SliceBegin - $StartPosition);
+                $Component->EndPosition = ($StartPosition + $Component->Length);
+
+                $BasketsObject->AddBasket($Component);
+
             } else {
-                echo (substr($this->Fruit->GetFruitPack(), $PrevSliceEnd, ($SliceBegin - $PrevSliceEnd)));
+                //echo (substr($this->Fruit->GetFruitPack(), $PrevSliceEnd, ($SliceBegin - $PrevSliceEnd)));
             }
+
+            //the tag itself
+            //echo (substr($this->Fruit->GetFruitPack(), $SliceBegin, $SliceLength));
+
 
             $PrevSliceEnd = $SliceEnd;
             $Increment++;
         }
 
-        echo (substr($this->Fruit->GetFruitPack(), $SliceEnd, $this->Fruit->GetLengthOfFruit() - $SliceEnd));
+        //echo (substr($this->Fruit->GetFruitPack(), $SliceEnd, $this->Fruit->GetLengthOfFruit() - $SliceEnd));
     }
 }

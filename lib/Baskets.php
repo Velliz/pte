@@ -2,14 +2,14 @@
 
 namespace pte;
 
-use pte\component\Constants;
-use pte\component\Dates;
-use pte\component\Navigator;
-use pte\component\Recrusive;
-use pte\component\Tags;
-use pte\component\Utility;
-use pte\component\Validator;
-use pte\component\Value;
+use pte\Component\Constants;
+use pte\Component\Dates;
+use pte\Component\Navigator;
+use pte\Component\Recrusive;
+use pte\Component\Tags;
+use pte\Component\Utility;
+use pte\Component\Validator;
+use pte\Component\Value;
 
 class Baskets
 {
@@ -19,13 +19,15 @@ class Baskets
      */
     protected $Baskets = array();
 
-    public function __construct(array $Baskets)
+    public function __construct()
     {
-        $this->Baskets = $Baskets;
     }
 
     public function AddBasket(SlicedComponent $Component)
     {
+
+        var_dump($Component);
+
         if ($Component instanceof Constants) {
 
         } else if ($Component instanceof Dates) {

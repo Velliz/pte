@@ -1,5 +1,7 @@
 <?php
 
+use pte\Baskets;
+
 include 'vendor/autoload.php';
 
 $template  = new \pte\Fruits();
@@ -10,7 +12,7 @@ $template->SetFruitSegments('template/sidebar.html');
 //echo $template->GetFruitPack();
 
 $slicer = new \pte\Slicer($template);
-$slicer->Slices();
+$slicer->Slices(new Baskets());
 
 /*
 include 'template.php';

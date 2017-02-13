@@ -115,7 +115,7 @@ class Slicer implements ISlicer
         }
 
         //post template
-        $Component = new View($PrevSliceEnd, $SliceBegin, $this->Fruit->GetLengthOfFruit() - $SliceEnd, $Increment);
+        $Component = new View($SliceEnd, $this->Fruit->GetLengthOfFruit(), ($this->Fruit->GetLengthOfFruit() - $SliceEnd), $Increment);
         $Component->SetComponent(substr($this->Fruit->GetFruitPack(), $SliceEnd, $this->Fruit->GetLengthOfFruit() - $SliceEnd));
         $BasketsObject->AddBasket($Component);
 

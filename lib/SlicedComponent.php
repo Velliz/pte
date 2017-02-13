@@ -2,32 +2,39 @@
 
 namespace pte;
 
-class SlicedComponent
+/**
+ * Class SlicedComponent
+ * Class for hold sliced fruit segment and anatomy
+ *
+ * @author Didit Velliz
+ * @mail diditvelliz@gmail.com
+ * @lisence MIT
+ * @package pte
+ * @copyright 2017
+ */
+abstract class SlicedComponent
 {
 
+    /**
+     * @var int
+     */
     public $StartPosition;
     public $EndPosition;
+    public $Length;
 
-    public $ComponentLength;
-    public $SliceLength;
-
+    /**
+     * Position of the slice loops
+     * @var int
+     */
     public $Position;
 
-    public $Before;
-    public $Begin;
-    public $Flag;
-    public $Inverse;
-    public $Key;
-    public $Parameter;
-    public $End;
-    public $After;
-
-    public $Component;
-    public $Child;
-
-    public function __construct()
+    public function __construct($StartPosition, $EndPosition, $Length, $Position)
     {
+        $this->StartPosition = $StartPosition;
+        $this->EndPosition = $EndPosition;
+        $this->Length = $Length;
 
+        $this->Position = $Position;
     }
 
 }

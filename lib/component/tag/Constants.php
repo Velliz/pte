@@ -1,20 +1,20 @@
 <?php
-namespace pte\component;
+namespace pte\component\tag;
 
+use pte\component\Tag;
 use pte\ISlicedComponent;
-use pte\SlicedComponent;
 
-class Constants extends SlicedComponent implements ISlicedComponent
+class Constants extends Tag implements ISlicedComponent
 {
 
     public function SetComponent($FruitSegments)
     {
-        $this->Component = $FruitSegments;
+
     }
 
     public function GetComponent()
     {
-        return $this->Component;
+
     }
 
     public function Output()

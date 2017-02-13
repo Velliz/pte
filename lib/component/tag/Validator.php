@@ -1,13 +1,11 @@
 <?php
-namespace pte\component;
+namespace pte\component\tag;
 
+use pte\component\Tag;
 use pte\ISlicedComponent;
-use pte\SlicedComponent;
 
-class Tags extends SlicedComponent implements ISlicedComponent
+class Validator extends Tag implements ISlicedComponent
 {
-
-
 
     public function SetComponent($FruitSegments)
     {

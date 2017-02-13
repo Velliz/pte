@@ -1,18 +1,31 @@
 <?php
-namespace pte\Component;
+namespace pte\component;
 
 use pte\ISlicedComponent;
 use pte\SlicedComponent;
 
 class Tags extends SlicedComponent implements ISlicedComponent
 {
-    public function SetValue($FruitSegments)
+
+
+
+    public function SetComponent($FruitSegments)
     {
-        // TODO: Implement SetValue() method.
+
     }
 
-    public function GetValue()
+    public function GetComponent()
     {
-        // TODO: Implement GetValue() method.
+
+    }
+
+    public function Output()
+    {
+
+    }
+
+    public function Initialize()
+    {
+
     }
 }

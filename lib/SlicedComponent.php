@@ -6,17 +6,28 @@ class SlicedComponent
 {
 
     public $StartPosition;
-    public $Position;
     public $EndPosition;
-    public $Length;
-    public $Raw;
 
-    public $Parameter;
+    public $ComponentLength;
+    public $SliceLength;
+
+    public $Position;
+
+    public $Before;
+    public $Begin;
     public $Flag;
+    public $Inverse;
+    public $Key;
+    public $Parameter;
+    public $End;
+    public $After;
+
+    public $Component;
     public $Child;
 
     public function __construct()
     {
+
     }
 
 }

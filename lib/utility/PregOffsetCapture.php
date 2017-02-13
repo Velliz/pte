@@ -1,6 +1,6 @@
 <?php
 
-namespace pte\Utility;
+namespace pte\utility;
 
 class PregOffsetCapture
 {

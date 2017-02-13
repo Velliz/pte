@@ -1,8 +1,8 @@
 <?php
 namespace pte;
 
-use pte\Component\Constants;
-use pte\Utility\PregOffsetCapture;
+use pte\component\ViewSegment;
+use pte\utility\PregOffsetCapture;
 
 /**
  * Class Slicer
@@ -38,11 +38,10 @@ class Slicer implements ISlicer
 
     public function Slices(Baskets $BasketsObject)
     {
-        $SliceBegin = 0;
+
+        $Increment = 0;
         $SliceEnd = 0;
         $PrevSliceEnd = 0;
-        $Increment = 0;
-        $StartPosition = 0;
 
         while (preg_match(ISlicer::PATTERN, $this->Fruit->GetFruitPack(), $Result, PREG_OFFSET_CAPTURE, $SliceEnd) > 0) {
 
@@ -63,28 +62,34 @@ class Slicer implements ISlicer
             $SliceLength = ($SliceEnd - $SliceBegin);
 
             if ($Increment === 0) {
-
-                $FruitSegments = (substr($this->Fruit->GetFruitPack(), $StartPosition, ($SliceBegin - $StartPosition)));
-
-                $Component = new Constants();
-                $Component->SetValue($FruitSegments);
-                $Component->Length = ($SliceBegin - $StartPosition);
-                $Component->EndPosition = ($StartPosition + $Component->Length);
+                $View = (substr($this->Fruit->GetFruitPack(), 0, $SliceBegin));
+                $Component = new ViewSegment();
+                $Component->SetComponent($View);
 
                 $BasketsObject->AddBasket($Component);
-
             } else {
-                //echo (substr($this->Fruit->GetFruitPack(), $PrevSliceEnd, ($SliceBegin - $PrevSliceEnd)));
+                $View = (substr($this->Fruit->GetFruitPack(), $PrevSliceEnd, ($SliceBegin - $PrevSliceEnd)));
+                $Component = new ViewSegment();
+                $Component->SetComponent($View);
+
+                $BasketsObject->AddBasket($Component);
             }
 
-            //the tag itself
-            //echo (substr($this->Fruit->GetFruitPack(), $SliceBegin, $SliceLength));
+            //todo: classify the tag based on structure
+            $TagSegments = (substr($this->Fruit->GetFruitPack(), $SliceBegin, $SliceLength));
+            $Component = new ViewSegment();
+            $Component->SetComponent($TagSegments);
 
+            $BasketsObject->AddBasket($Component);
 
             $PrevSliceEnd = $SliceEnd;
             $Increment++;
         }
 
-        //echo (substr($this->Fruit->GetFruitPack(), $SliceEnd, $this->Fruit->GetLengthOfFruit() - $SliceEnd));
+        $View = (substr($this->Fruit->GetFruitPack(), $SliceEnd, $this->Fruit->GetLengthOfFruit() - $SliceEnd));
+        $Component = new ViewSegment();
+        $Component->SetComponent($View);
+
+        $BasketsObject->AddBasket($Component);
     }
 }

@@ -2,14 +2,14 @@
 
 namespace pte;
 
-use pte\Component\Constants;
-use pte\Component\Dates;
-use pte\Component\Navigator;
-use pte\Component\Recrusive;
-use pte\Component\Tags;
-use pte\Component\Utility;
-use pte\Component\Validator;
-use pte\Component\Value;
+use pte\component\Constants;
+use pte\component\Dates;
+use pte\component\Navigator;
+use pte\component\Recrusive;
+use pte\component\Tags;
+use pte\component\Utility;
+use pte\component\Validator;
+use pte\component\Value;
 
 class Baskets
 {

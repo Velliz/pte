@@ -4,8 +4,11 @@ namespace pte;
 interface ISlicedComponent
 {
 
-    public function SetValue($FruitSegments);
+    public function SetComponent($FruitSegments);
 
-    public function GetValue();
+    public function GetComponent();
 
+    public function Output();
+
+    public function Initialize();
 }

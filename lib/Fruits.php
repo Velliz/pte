@@ -1,6 +1,16 @@
 <?php
 namespace pte;
 
+/**
+ * Class Fruits
+ * Fruit is class for convert the template into fruit representations.
+ *
+ * @author Didit Velliz
+ * @mail diditvelliz@gmail.com
+ * @lisence MIT
+ * @package pte
+ * @copyright 2017
+ */
 class Fruits implements IFruits
 {
 
@@ -81,6 +91,9 @@ class Fruits implements IFruits
         }
     }
 
+    /**
+     * @return bool|string
+     */
     public function GetFruitPack()
     {
         if (!$this->Master) {
@@ -109,6 +122,9 @@ class Fruits implements IFruits
         return $this->GetFruitPack();
     }
 
+    /**
+     * @return int
+     */
     public function GetLengthOfFruit()
     {
         return strlen($this->Template);

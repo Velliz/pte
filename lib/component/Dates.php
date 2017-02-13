@@ -1,5 +1,5 @@
 <?php
-namespace pte\Component;
+namespace pte\component;
 
 use pte\ISlicedComponent;
 use pte\SlicedComponent;

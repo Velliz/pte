@@ -1,10 +1,11 @@
 <?php
+
 namespace pte\component;
 
 use pte\ISlicedComponent;
 use pte\SlicedComponent;
 
-class Constants extends SlicedComponent implements ISlicedComponent
+class ViewSegment extends SlicedComponent implements ISlicedComponent
 {
 
     public function SetComponent($FruitSegments)
@@ -19,7 +20,7 @@ class Constants extends SlicedComponent implements ISlicedComponent
 
     public function Output()
     {
-
+        return $this;
     }
 
     public function Initialize()

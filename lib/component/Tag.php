@@ -17,6 +17,9 @@ class Tag extends SlicedComponent implements ISlicedComponent
     public $End;
     public $After;
 
+    /**
+     * @var SlicedComponent
+     */
     public $Child;
 
     public function SetComponent($FruitSegments)
@@ -37,5 +40,10 @@ class Tag extends SlicedComponent implements ISlicedComponent
     public function Initialize()
     {
 
+    }
+
+    public function SetChild(SlicedComponent $Child)
+    {
+        $this->Child = $Child;
     }
 }

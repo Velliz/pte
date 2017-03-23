@@ -14,30 +14,11 @@ class Baskets
     {
     }
 
-    public function AddBasket($Component)
+    public function AddBasket(SlicedComponent $Component)
     {
 
-        var_dump($Component);
+        array_push($this->Baskets, $Component);
 
-//        if ($Component instanceof Constants) {
-//
-//        } else if ($Component instanceof Dates) {
-//
-//        } else if ($Component instanceof Navigator) {
-//
-//        } else if ($Component instanceof Recrusive) {
-//
-//        } else if ($Component instanceof Tags) {
-//
-//        } else if ($Component instanceof Utility) {
-//
-//        } else if ($Component instanceof Validator) {
-//
-//        } else if ($Component instanceof Value) {
-//
-//        } else {
-//
-//        }
     }
 
     public function GetBasket()

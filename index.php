@@ -4,6 +4,7 @@ use pte\Baskets;
 
 include 'vendor/autoload.php';
 
+/*
 $template  = new \pte\Fruits();
 $template->SetFruitMaster('template/master.html');
 $template->SetFruitBody('template/view.html');
@@ -13,6 +14,9 @@ $template->SetFruitSegments('template/sidebar.html');
 
 $slicer = new \pte\Slicer($template);
 $slicer->Slices(new Baskets());
+*/
+
+
 
 /*
 include 'template.php';
@@ -24,3 +28,10 @@ $template->SetView('sidebar.html');
 $template->SetValue(array());
 $template->Output(true, template::HTML_TRUE, template::MASTER_TRUE);
 */
+
+
+$compile = new \pte\compiler\FruitPresent();
+
+$fn = $compile->structure_function_public('getAge', null, '');
+
+echo $fn;

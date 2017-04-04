@@ -122,7 +122,11 @@ class Slicer implements ISlicer
         $Component->SetComponent(substr($this->Fruit->GetFruitPack(), $SliceEnd, $this->Fruit->GetLengthOfFruit() - $SliceEnd));
         $BasketsObject->AddBasket($Component);
 
-        var_dump($BasketsObject->GetBasket());
+        $basket = $BasketsObject->GetBasket();
+        foreach ($basket as $val)
+        {
+            var_dump($val->GetComponent());
+        }
 
     }
 

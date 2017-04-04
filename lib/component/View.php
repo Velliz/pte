@@ -8,7 +8,7 @@ use pte\SlicedComponent;
 class View extends SlicedComponent implements ISlicedComponent
 {
 
-    protected $Component;
+    var $Component;
 
     public function SetComponent($FruitSegments)
     {

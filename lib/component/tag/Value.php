@@ -14,7 +14,7 @@ class Value extends Tag implements ISlicedComponent
 
     public function GetComponent()
     {
-
+        return $this->Parameter;
     }
 
     public function Output()

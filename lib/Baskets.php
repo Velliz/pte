@@ -8,7 +8,7 @@ class Baskets
     /**
      * @var array
      */
-    protected $Baskets = array();
+    public $Baskets = array();
 
     public function __construct()
     {
@@ -24,6 +24,11 @@ class Baskets
     public function GetBasket()
     {
         return $this->Baskets;
+    }
+
+    public function GetBasketComponent()
+    {
+        return (array)$this->Baskets;
     }
 
 }

@@ -29,7 +29,7 @@ class Tag extends SlicedComponent implements ISlicedComponent
 
     public function GetComponent()
     {
-
+        return $this->Parameter;
     }
 
     public function Output()

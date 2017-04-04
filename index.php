@@ -32,6 +32,8 @@ $template->Output(true, template::HTML_TRUE, template::MASTER_TRUE);
 
 $compile = new \pte\compiler\FruitPresent();
 
-$fn = $compile->structure_function_public('getAge', null, '');
+$nama = $compile->structure_variable_value('didit', 10);
+$return = $compile->command_return($nama);
+$fn = $compile->structure_function_public('getAge', null, $return);
 
 echo $fn;

@@ -11,27 +11,27 @@ class FruitPresent
 {
 
     var $structure = array(
-        'FILE' => '<?php %s ?>', //ok
-        'VARIABLE' => '$%s;', //ok
-        'VARIABLE_VALUE' => '$%s = %s;', //ok
-        'VARIABLE_OBJECT' => '$%s = new %s();', //ok
-        'FOREACH' => 'foreach (%s as %s) { %s }', //ok
-        'FOREACH_KEY_VAL' => 'foreach (%s as %s => %s) { %s }', //ok
-        'WHILE' => 'while (%s %s %s) { %s }', //ok
-        'DO_WHILE' => 'do { %s } while (%s %s %s)', //ok
-        'IF' => 'if (%s %s %s) (%s)', //ok
-        'IF_ELSE' => 'if (%s %s %s) ( %s ) else { %s }', //ok
-        'FUNCTION_PUBLIC' => 'public function %s(%s) { %s }', //ok
-        'FUNCTION_PRIVATE' => 'private function %s(%s) { %s }', //ok
-        'FUNCTION_STATIC' => 'static function %s(%s) { %s }', //ok
-        'CLASS' => 'class %s { %s }', //ok
-        'CLASS_EXTENDS' => 'class %s extends %s { %s } ', //ok
-        'CLASS_IMPLEMENTS' => 'class %s implements %s { %s }', //ok
-        'CLASS_EXTENDS_IMPLEMENTS' => 'class %s extends %s implements %s { %s }', //ok
-        'NAMESPACE' => 'namespace %s;',//ok
-        'LOGIC' => '(%s %s %s) ? %s : %s;', //ok
-        'CASTING' => '(%s)', //ok
-        'SWITCH' => 'SWITCH (%s) %s', //ok
+        'FILE' => '<?php %s ?>',
+        'VARIABLE' => '$%s;',
+        'VARIABLE_VALUE' => '$%s = %s;',
+        'VARIABLE_OBJECT' => '$%s = new %s();',
+        'FOREACH' => 'foreach (%s as %s) { %s }',
+        'FOREACH_KEY_VAL' => 'foreach (%s as %s => %s) { %s }',
+        'WHILE' => 'while (%s %s %s) { %s }',
+        'DO_WHILE' => 'do { %s } while (%s %s %s)',
+        'IF' => 'if (%s %s %s) (%s)',
+        'IF_ELSE' => 'if (%s %s %s) ( %s ) else { %s }',
+        'FUNCTION_PUBLIC' => 'public function %s(%s) { %s }',
+        'FUNCTION_PRIVATE' => 'private function %s(%s) { %s }',
+        'FUNCTION_STATIC' => 'static function %s(%s) { %s }',
+        'CLASS' => 'class %s { %s }',
+        'CLASS_EXTENDS' => 'class %s extends %s { %s } ',
+        'CLASS_IMPLEMENTS' => 'class %s implements %s { %s }',
+        'CLASS_EXTENDS_IMPLEMENTS' => 'class %s extends %s implements %s { %s }',
+        'NAMESPACE' => 'namespace %s;',
+        'LOGIC' => '(%s %s %s) ? %s : %s;',
+        'CASTING' => '(%s)',
+        'SWITCH' => 'SWITCH (%s) %s',
     );
 
     var $data = array(

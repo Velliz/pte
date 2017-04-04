@@ -95,9 +95,7 @@ class Slicer implements ISlicer
                 $TagComponent->Parameter = $Parameter;
                 $TagComponent->End = $End;
                 $TagComponent->SetComponent(substr($this->Fruit->GetFruitPack(), $SliceBegin, $SliceLength));
-
-                $Blocks = $TagComponent;
-
+                $BasketsObject->AddBasket($TagComponent);
             }
 
             if (strlen($Before) === 0 && strlen($After) === 0) {
@@ -125,7 +123,7 @@ class Slicer implements ISlicer
         $basket = $BasketsObject->GetBasket();
         foreach ($basket as $val)
         {
-            var_dump($val->GetComponent());
+            echo $val->GetComponent();
         }
 
     }

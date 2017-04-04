@@ -6,15 +6,15 @@ interface ISlicer
     /**
      * preg_match with Named subpatterns
      */
-    const PATTERN = '@(?<Before><!--)*(?<Begin>{)(?<Flag>[!|/])(?<Inverse>[!])?(?<Key>[a-zA-Z0-9\._-]+)(?:\((?<Parameter>[\S\s]*?)\))?(?<End>})(?<After>-->)*@';
+    const PATTERN = "@(?:<A><!--)(?:<B>{)(?:<C>[!|/])(?:<D>[!])(?:<E>[a-zA-Z0-9\._-]+)(?:\((?:<F>[\S\s]*?)\))(?:<G>})(?:<H>-->)@";
 
-    const BEFORE = 'Before';
-    const BEGIN = 'Begin';
-    const FLAG = 'Flag';
-    const INVERSE = 'Inverse';
-    const KEY = 'Key';
-    const PARAMETER = 'Parameter';
-    const END = 'End';
-    const AFTER = 'After';
+    const BEFORE = 'A';
+    const BEGIN = 'B';
+    const FLAG = 'C';
+    const INVERSE = 'D';
+    const KEY = 'E';
+    const PARAMETER = 'F';
+    const END = 'G';
+    const AFTER = 'H';
 
 }

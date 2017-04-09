@@ -98,7 +98,7 @@ class Slicer implements ISlicer
                 $BasketsObject->AddBasket($TagComponent);
             }
             if ($Parameter != false) {
-
+                //TODO: parameter function
             }
 
             if ($Key != false && $Before == false && $After == false) {
@@ -128,6 +128,7 @@ class Slicer implements ISlicer
         foreach ($basket as $val) {
             echo($val->GetComponent());
         }
+        //TODO: convert to Abstract Syntax Three
     }
 
     const BLOCK_OPEN = 0;

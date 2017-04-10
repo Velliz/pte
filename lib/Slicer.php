@@ -2,6 +2,7 @@
 namespace pte;
 
 use pte\component\tag\Blocks;
+use pte\component\tag\Functions;
 use pte\component\tag\Value;
 use pte\component\Tag;
 use pte\component\View;
@@ -44,8 +45,7 @@ class Slicer implements ISlicer
 
         //init slice position
         $Increment = $SliceBegin = $SliceEnd = $PrevSliceEnd = 0;
-        //init slice is on block true or false
-        $Blocks = false;
+
         //slice the template begin with regex pattern
         while (preg_match(ISlicer::PATTERN, $this->Fruit->GetFruitPack(), $Result, PREG_OFFSET_CAPTURE, $SliceEnd) > 0) {
 
@@ -98,10 +98,20 @@ class Slicer implements ISlicer
                 $BasketsObject->AddBasket($TagComponent);
             }
             if ($Parameter != false) {
-                //TODO: parameter function
+                $TagComponent = new Functions($SliceBegin, $SliceEnd, $SliceLength, $Increment);
+                $TagComponent->Before = $Before;
+                $TagComponent->Begin = $Begin;
+                $TagComponent->Flag = $Flag;
+                $TagComponent->Inverse = $Inverse;
+                $TagComponent->Key = $Key;
+                $TagComponent->Parameter = $Parameter;
+                $TagComponent->End = $End;
+                $TagComponent->After = $After;
+                $TagComponent->SetComponent(substr($this->Fruit->GetFruitPack(), $SliceBegin, $SliceLength));
+                $BasketsObject->AddBasket($TagComponent);
             }
 
-            if ($Key != false && $Before == false && $After == false) {
+            if ($Key != false && $Before == false && $After == false && $Parameter == false) {
                 $TagComponent = new Value($SliceBegin, $SliceEnd, $SliceLength, $Increment);
                 $TagComponent->Before = $Before;
                 $TagComponent->Begin = $Begin;
@@ -124,29 +134,17 @@ class Slicer implements ISlicer
         $Component->SetComponent(substr($this->Fruit->GetFruitPack(), $SliceEnd, $this->Fruit->GetLengthOfFruit() - $SliceEnd));
         $BasketsObject->AddBasket($Component);
 
-        $basket = $BasketsObject->GetBasket();
-        foreach ($basket as $val) {
-            echo($val->GetComponent());
-        }
         //TODO: convert to Abstract Syntax Three
     }
 
-    const BLOCK_OPEN = 0;
-    const BLOCK_CLOSED = 1;
-    const VALUE = 3;
-
-    public function BlockResolver($Data, $BlogType)
+    public function AppendTemplates()
     {
-        switch ($BlogType) {
-            case Slicer::BLOCK_OPEN:
-                $this->BlockResolver($Data, $BlogType);
-                break;
-            case Slicer::BLOCK_CLOSED:
 
-                break;
-            case Slicer::VALUE:
-
-                break;
-        }
     }
+
+    public function FruitToComponent()
+    {
+
+    }
+
 }

@@ -1,4 +1,5 @@
 <?php
+
 namespace pte;
 
 /**
@@ -43,6 +44,12 @@ class Fruits implements IFruits
      */
     protected $Segments = array();
 
+    public $Name;
+
+    public $Extension;
+
+    protected $Location;
+
     /**
      * RawTemplate constructor.
      */
@@ -68,6 +75,9 @@ class Fruits implements IFruits
         if ($Body === false) {
             throw new PteException(PteException::NOT_FOUND);
         }
+        $this->Location = $bodyLocation;
+        $extension = explode('.', $bodyLocation);
+        $this->Extension = $extension[sizeof($extension) - 1];
         $this->Body = $Body;
         return true;
     }
@@ -128,5 +138,20 @@ class Fruits implements IFruits
     public function GetLengthOfFruit()
     {
         return strlen($this->Template);
+    }
+
+    public function GetFruitExtension()
+    {
+        return $this->Extension;
+    }
+
+    public function GetName()
+    {
+        return $this->Name;
+    }
+
+    public function GetFileLocation()
+    {
+        return $this->Location;
     }
 }

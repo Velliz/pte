@@ -17,11 +17,6 @@ class Validator extends Tag implements ISlicedComponent
         return $this->Before . $this->Begin . $this->Flag . $this->Inverse . $this->Key . $this->Parameter . $this->End . $this->After;
     }
 
-    public function Output()
-    {
-
-    }
-
     public function Initialize()
     {
 

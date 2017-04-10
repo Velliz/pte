@@ -8,7 +8,7 @@ use pte\SlicedComponent;
 class View extends SlicedComponent implements ISlicedComponent
 {
 
-    var $Component;
+    private $Component;
 
     public function SetComponent($FruitSegments)
     {
@@ -22,11 +22,16 @@ class View extends SlicedComponent implements ISlicedComponent
 
     public function Output()
     {
-        return $this;
+        return $this->Component;
     }
 
     public function Initialize()
     {
 
+    }
+
+    public function GetName()
+    {
+        // TODO: Implement GetName() method.
     }
 }

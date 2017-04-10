@@ -21,6 +21,7 @@ abstract class SlicedComponent
     public $StartPosition;
     public $EndPosition;
     public $Length;
+    public $Value;
 
     /**
      * Position of the slice loops

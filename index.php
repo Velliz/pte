@@ -1,20 +1,32 @@
 <?php
-
+//TODO: index will moved to pte_environment
 use pte\Baskets;
+use pte\Fruits;
+use pte\Slicer;
 
 include 'vendor/autoload.php';
 
+$data = array(
+    'Author' => 'Didit Velliz',
+    'Nama' => 'Puko Template Engine',
+    'Title' => 'Test Template',
+);
 
-$template  = new \pte\Fruits();
+$template  = new Fruits();
 $template->SetFruitMaster('template/master.html');
 $template->SetFruitBody('template/view.html');
 $template->SetFruitSegments('template/sidebar.html');
 
 //echo $template->GetFruitPack();
+$basket = new Baskets();
 
-$slicer = new \pte\Slicer($template);
-$slicer->Slices(new Baskets());
+$slicer = new Slicer($template);
+$slicer->Slices($basket);
+$basket->Parser($data);
 
+foreach ($basket->GetBasket() as $k => $v) {
+    echo $v->Output();
+}
 
 
 

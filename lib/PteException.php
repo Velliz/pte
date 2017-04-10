@@ -12,7 +12,13 @@ class PteException extends Exception
 
     private $Message = null;
 
-    public function __construct($ErrorCode)
+    public function __construct($eCode)
+    {
+        $this->SetError($eCode);
+    }
+
+
+    public function SetError($ErrorCode)
     {
         switch ($ErrorCode) {
             case PteException::NOT_FOUND:
@@ -28,12 +34,11 @@ class PteException extends Exception
                 $this->Message = "Error (UNKNOWN)";
                 break;
         }
-
     }
 
     function __toString()
     {
-        return $this->Message;
+        echo $this->Message;
     }
 
 }

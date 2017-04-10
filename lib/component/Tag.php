@@ -34,7 +34,7 @@ class Tag extends SlicedComponent implements ISlicedComponent
 
     public function Output()
     {
-
+        return $this->Value;
     }
 
     public function Initialize()
@@ -45,5 +45,10 @@ class Tag extends SlicedComponent implements ISlicedComponent
     public function SetChild(SlicedComponent $Child)
     {
         $this->Child = $Child;
+    }
+
+    public function GetName()
+    {
+        // TODO: Implement GetName() method.
     }
 }

@@ -8,6 +8,8 @@ interface ISlicedComponent
 
     public function GetComponent();
 
+    public function GetName();
+
     public function Output();
 
     public function Initialize();

@@ -102,10 +102,6 @@ class Slicer implements ISlicer
                 }
             }
 
-//            if ($Flag === "/") {
-//                $this->PointerTagComponent = null;
-//            }
-
             if ($Before !== false && $After !== false) {
                 $TagComponent = new Blocks($SliceBegin, $SliceEnd, $SliceLength, $Increment);
                 $TagComponent->Before = $Before;
@@ -118,15 +114,8 @@ class Slicer implements ISlicer
                 $TagComponent->After = $After;
                 $TagComponent->SetComponent(substr($this->Fruit->GetFruitPack(), $SliceBegin, $SliceLength));
                 if ($this->PointerTagComponent !== null) {
-                    if ($Flag == '!') {
-                        $this->PointerTagComponent->AppendChild($TagComponent);
-                        $this->PointerTagComponent = $this->PointerTagComponent->Child[sizeof($this->PointerTagComponent->Child) - 1];
-                    }
-                    if ($Flag == '/') {
-                        $this->PointerTagComponent = $BasketsObject->GetBasket()[sizeof($BasketsObject->GetBasket()) - 1]->Child;
-                        //todo: roll to last pointer
-                        $this->PointerTagComponent->AppendChild($TagComponent);
-                    }
+                    $this->PointerTagComponent->AppendChild($TagComponent);
+                    $this->PointerTagComponent = $this->PointerTagComponent->Child[sizeof($this->PointerTagComponent->Child) - 1];
                 } else {
                     $this->PointerTagComponent = $TagComponent;
                     $BasketsObject->AddBasket($this->PointerTagComponent);
@@ -167,6 +156,10 @@ class Slicer implements ISlicer
                 } else {
                     $BasketsObject->AddBasket($TagComponent);
                 }
+            }
+
+            if ($Flag === '/') {
+                $this->PointerTagComponent = null;
             }
 
             $PrevSliceEnd = $SliceEnd;

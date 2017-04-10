@@ -24,7 +24,7 @@ $slicer = new Slicer($template);
 $slicer->Slices($basket);
 $basket->Parser($data);
 
-var_dump($basket->GetBasket());
+//var_dump($basket->GetBasket());
 die();
 
 foreach ($basket->GetBasket() as $k => $v) {

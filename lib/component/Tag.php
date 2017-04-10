@@ -22,7 +22,7 @@ class Tag extends SlicedComponent implements ISlicedComponent
      * @var array
      */
     public $Child = array();
-    public $Pointer = false;
+    public $Pointer = null;
 
     public function SetComponent($FruitSegments)
     {
@@ -56,7 +56,7 @@ class Tag extends SlicedComponent implements ISlicedComponent
 
     public function AppendBlock(SlicedComponent $Child)
     {
-        $this->Child[sizeof($this->Child) - 1]->Child = $Child;
+        $this->Child[sizeof($this->Child) - 1] = $Child;
     }
 
     public function GetName()

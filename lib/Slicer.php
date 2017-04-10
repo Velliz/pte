@@ -50,7 +50,8 @@ class Slicer implements ISlicer
     {
 
         //init slice position
-        $Increment = $SliceBegin = $SliceEnd = $PrevSliceEnd = 0;
+        $DrillDown = $Increment = $SliceBegin = $SliceEnd = $PrevSliceEnd = 0;
+
 
         //slice the template begin with regex pattern
         while (preg_match(ISlicer::PATTERN, $this->Fruit->GetFruitPack(), $Result, PREG_OFFSET_CAPTURE, $SliceEnd) > 0) {
@@ -80,9 +81,8 @@ class Slicer implements ISlicer
             $End = ($Capture->PregCaptureValue(ISlicer::END) === "") ? false : $Capture->PregCaptureValue(ISlicer::END);
             $After = ($Capture->PregCaptureValue(ISlicer::AFTER) === "") ? false : $Capture->PregCaptureValue(ISlicer::AFTER);
 
-
             if ($Increment === 0) {
-                $ViewComponent = new View(0, $SliceBegin, $SliceBegin, 0);
+                $ViewComponent = new View(0, $SliceBegin, $SliceBegin, -1);
                 $ViewComponent->SetComponent(substr($this->Fruit->GetFruitPack(), $Increment, $SliceBegin));
 
                 if ($this->PointerTagComponent !== null) {
@@ -102,6 +102,9 @@ class Slicer implements ISlicer
                 }
             }
 
+//            if ($Flag === "/") {
+//                $this->PointerTagComponent = null;
+//            }
 
             if ($Before !== false && $After !== false) {
                 $TagComponent = new Blocks($SliceBegin, $SliceEnd, $SliceLength, $Increment);
@@ -115,7 +118,15 @@ class Slicer implements ISlicer
                 $TagComponent->After = $After;
                 $TagComponent->SetComponent(substr($this->Fruit->GetFruitPack(), $SliceBegin, $SliceLength));
                 if ($this->PointerTagComponent !== null) {
-                    $this->PointerTagComponent->AppendChild($TagComponent);
+                    if ($Flag == '!') {
+                        $this->PointerTagComponent->AppendChild($TagComponent);
+                        $this->PointerTagComponent = $this->PointerTagComponent->Child[sizeof($this->PointerTagComponent->Child) - 1];
+                    }
+                    if ($Flag == '/') {
+                        $this->PointerTagComponent = $BasketsObject->GetBasket()[sizeof($BasketsObject->GetBasket()) - 1]->Child;
+                        //todo: roll to last pointer
+                        $this->PointerTagComponent->AppendChild($TagComponent);
+                    }
                 } else {
                     $this->PointerTagComponent = $TagComponent;
                     $BasketsObject->AddBasket($this->PointerTagComponent);
@@ -158,10 +169,6 @@ class Slicer implements ISlicer
                 }
             }
 
-            if ($Flag === "/") {
-                $this->PointerTagComponent = null;
-            }
-
             $PrevSliceEnd = $SliceEnd;
             $Increment++;
         }
@@ -174,9 +181,20 @@ class Slicer implements ISlicer
         //TODO: convert to Abstract Syntax Three and Recursive
     }
 
-    public function AppendTemplates()
+    public function AppendTemplates(SlicedComponent $elements)
     {
+        $branch = array();
 
+        if ($elements instanceof Blocks) {
+            $children = $this->AppendTemplates($elements, $element['id']);
+            if ($children) {
+                $element['children'] = $children;
+            }
+            $branch[] = $element;
+        }
+
+
+        return $branch;
     }
 
     public function FruitToComponent()

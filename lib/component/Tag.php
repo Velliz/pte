@@ -2,6 +2,7 @@
 
 namespace pte\component;
 
+use pte\component\tag\Blocks;
 use pte\ISlicedComponent;
 use pte\SlicedComponent;
 
@@ -18,9 +19,10 @@ class Tag extends SlicedComponent implements ISlicedComponent
     public $After;
 
     /**
-     * @var SlicedComponent
+     * @var array
      */
-    public $Child;
+    public $Child = array();
+    public $Pointer = false;
 
     public function SetComponent($FruitSegments)
     {
@@ -44,7 +46,17 @@ class Tag extends SlicedComponent implements ISlicedComponent
 
     public function SetChild(SlicedComponent $Child)
     {
-        $this->Child = $Child;
+        $this->Child[0] = $Child;
+    }
+
+    public function AppendChild(SlicedComponent $Child)
+    {
+        $this->Child[sizeof($this->Child)] = $Child;
+    }
+
+    public function AppendBlock(SlicedComponent $Child)
+    {
+        $this->Child[sizeof($this->Child) - 1]->Child = $Child;
     }
 
     public function GetName()

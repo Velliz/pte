@@ -1,4 +1,5 @@
 <?php
+
 namespace pte;
 
 use pte\component\tag\Blocks;
@@ -30,6 +31,11 @@ class Slicer implements ISlicer
      * @var SlicedComponent
      */
     protected $SlicedComponent;
+
+    /**
+     * @var Blocks
+     */
+    protected $PointerTagComponent = null;
 
     /**
      * Slicer constructor.
@@ -74,15 +80,28 @@ class Slicer implements ISlicer
             $End = ($Capture->PregCaptureValue(ISlicer::END) === "") ? false : $Capture->PregCaptureValue(ISlicer::END);
             $After = ($Capture->PregCaptureValue(ISlicer::AFTER) === "") ? false : $Capture->PregCaptureValue(ISlicer::AFTER);
 
+
             if ($Increment === 0) {
                 $ViewComponent = new View(0, $SliceBegin, $SliceBegin, 0);
                 $ViewComponent->SetComponent(substr($this->Fruit->GetFruitPack(), $Increment, $SliceBegin));
-                $BasketsObject->AddBasket($ViewComponent);
+
+                if ($this->PointerTagComponent !== null) {
+                    $this->PointerTagComponent->AppendChild($ViewComponent);
+                } else {
+                    $BasketsObject->AddBasket($ViewComponent);
+                }
+
             } else {
                 $ViewComponent = new View($SliceBegin, $SliceEnd, $SliceLength, $Increment);
                 $ViewComponent->SetComponent(substr($this->Fruit->GetFruitPack(), $PrevSliceEnd, $SliceBegin - $PrevSliceEnd));
-                $BasketsObject->AddBasket($ViewComponent);
+
+                if ($this->PointerTagComponent !== null) {
+                    $this->PointerTagComponent->AppendChild($ViewComponent);
+                } else {
+                    $BasketsObject->AddBasket($ViewComponent);
+                }
             }
+
 
             if ($Before !== false && $After !== false) {
                 $TagComponent = new Blocks($SliceBegin, $SliceEnd, $SliceLength, $Increment);
@@ -95,7 +114,12 @@ class Slicer implements ISlicer
                 $TagComponent->End = $End;
                 $TagComponent->After = $After;
                 $TagComponent->SetComponent(substr($this->Fruit->GetFruitPack(), $SliceBegin, $SliceLength));
-                $BasketsObject->AddBasket($TagComponent);
+                if ($this->PointerTagComponent !== null) {
+                    $this->PointerTagComponent->AppendChild($TagComponent);
+                } else {
+                    $this->PointerTagComponent = $TagComponent;
+                    $BasketsObject->AddBasket($this->PointerTagComponent);
+                }
             }
             if ($Parameter != false) {
                 $TagComponent = new Functions($SliceBegin, $SliceEnd, $SliceLength, $Increment);
@@ -108,7 +132,12 @@ class Slicer implements ISlicer
                 $TagComponent->End = $End;
                 $TagComponent->After = $After;
                 $TagComponent->SetComponent(substr($this->Fruit->GetFruitPack(), $SliceBegin, $SliceLength));
-                $BasketsObject->AddBasket($TagComponent);
+                if ($this->PointerTagComponent !== null) {
+                    $this->PointerTagComponent->AppendChild($TagComponent);
+                } else {
+                    $BasketsObject->AddBasket($TagComponent);
+                }
+
             }
 
             if ($Key != false && $Before == false && $After == false && $Parameter == false) {
@@ -122,7 +151,15 @@ class Slicer implements ISlicer
                 $TagComponent->End = $End;
                 $TagComponent->After = $After;
                 $TagComponent->SetComponent(substr($this->Fruit->GetFruitPack(), $SliceBegin, $SliceLength));
-                $BasketsObject->AddBasket($TagComponent);
+                if ($this->PointerTagComponent !== null) {
+                    $this->PointerTagComponent->AppendChild($TagComponent);
+                } else {
+                    $BasketsObject->AddBasket($TagComponent);
+                }
+            }
+
+            if ($Flag === "/") {
+                $this->PointerTagComponent = null;
             }
 
             $PrevSliceEnd = $SliceEnd;
@@ -134,7 +171,7 @@ class Slicer implements ISlicer
         $Component->SetComponent(substr($this->Fruit->GetFruitPack(), $SliceEnd, $this->Fruit->GetLengthOfFruit() - $SliceEnd));
         $BasketsObject->AddBasket($Component);
 
-        //TODO: convert to Abstract Syntax Three
+        //TODO: convert to Abstract Syntax Three and Recursive
     }
 
     public function AppendTemplates()

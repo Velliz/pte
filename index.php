@@ -24,8 +24,12 @@ $slicer = new Slicer($template);
 $slicer->Slices($basket);
 $basket->Parser($data);
 
+var_dump($basket->GetBasket());
+die();
+
 foreach ($basket->GetBasket() as $k => $v) {
-    echo $v->Output();
+    var_dump($v->GetComponent());
+    //echo ($v->Output());
 }
 
 

@@ -102,7 +102,11 @@ class Slicer implements ISlicer
                 }
             }
 
-            if ($Before !== false && $After !== false) {
+            if ($Flag === '/') {
+                $this->PointerTagComponent = null;
+            }
+
+            if ($Before !== false && $After !== false && $Flag != "/") {
                 $TagComponent = new Blocks($SliceBegin, $SliceEnd, $SliceLength, $Increment);
                 $TagComponent->Before = $Before;
                 $TagComponent->Begin = $Begin;
@@ -156,10 +160,6 @@ class Slicer implements ISlicer
                 } else {
                     $BasketsObject->AddBasket($TagComponent);
                 }
-            }
-
-            if ($Flag === '/') {
-                $this->PointerTagComponent = null;
             }
 
             $PrevSliceEnd = $SliceEnd;

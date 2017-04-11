@@ -2,12 +2,11 @@
 
 namespace pte\utility;
 
+use pte\ISlicer;
+
 class PregOffsetCapture
 {
 
-    /**
-     * @var array
-     */
     private $RawPregData;
 
     public function __construct($RawPregData)
@@ -26,7 +25,7 @@ class PregOffsetCapture
         return true;
     }
 
-    public function PregCaptureValue($key)
+    private function PregCaptureValue($key)
     {
         $validate = $this->PregValidate($key);
         if ($validate) {
@@ -44,12 +43,44 @@ class PregOffsetCapture
         return false;
     }
 
-    public function PregCaptureFinishPosition($key)
+    private function PregCaptureFinishPosition($key)
     {
         $validate = $this->PregValidate($key);
         if ($validate) {
             return ($this->RawPregData[$key][1]) + strlen($this->RawPregData[$key][0]);
         }
         return false;
+    }
+
+    public function SliceBegin()
+    {
+        if ($this->PregCaptureValue(ISlicer::BEFORE) !== '') {
+            return $this->PregCaptureStartPosition(ISlicer::BEFORE);
+        } else {
+            return $this->PregCaptureStartPosition(ISlicer::BEGIN);
+        }
+    }
+
+    public function SliceEnd()
+    {
+        if ($this->PregCaptureValue(ISlicer::AFTER) !== false) {
+            return $this->PregCaptureFinishPosition(ISlicer::AFTER);
+        } else {
+            return $this->PregCaptureFinishPosition(ISlicer::END);
+        }
+    }
+
+    public function SliceLength()
+    {
+        return ($this->SliceEnd() - $this->SliceBegin());
+    }
+
+    public function Capture($key)
+    {
+        $value = $this->PregCaptureValue($key);
+        if ($value == '') {
+            return false;
+        }
+        return $value;
     }
 }

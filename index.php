@@ -1,33 +1,36 @@
 <?php
+
 //TODO: index will moved to pte_environment
+
 use pte\Baskets;
 use pte\Fruits;
-use pte\Slicer;
+use pte\Slicer2;
+use pte\Slicer3;
 
 include 'vendor/autoload.php';
 
-$data = array(
-    'Author' => 'Didit Velliz',
-    'Nama' => 'Puko Template Engine',
-    'Title' => 'Test Template',
-);
-
-$template  = new Fruits();
+$template = new Fruits();
 $template->SetFruitMaster('template/master.html');
 $template->SetFruitBody('template/view.html');
 $template->SetFruitSegments('template/sidebar.html');
-
 //echo $template->GetFruitPack();
-$basket = new Baskets();
 
-$slicer = new Slicer($template);
-$slicer->Slices($basket);
-$basket->Parser($data);
+$slicer = new Slicer3($template);
+$data['Tests'] = "testingnya";
+$data['Check'] = array(
+    'Pass' => 'test pass',
+    'Bts' => array(
+        array('Pass' => 'Jin'),
+        array('Pass' => 'Kevin'),
+        array('Pass' => 'Bob'),
+    ),
+);
 
-foreach ($basket->GetBasket() as $k => $v) {
-    var_dump($v);
-    //echo ($v->Output());
-}
+$output = array(
+    'child' => array()
+);
+$parsedContent = $slicer->Lexer($template, $output['child']);
+var_dump($parsedContent);
 
 
 

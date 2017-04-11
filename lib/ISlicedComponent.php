@@ -13,4 +13,6 @@ interface ISlicedComponent
     public function Output();
 
     public function Initialize();
+
+    public function ChildRender($childObject);
 }

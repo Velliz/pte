@@ -102,7 +102,7 @@ foreach ($freshValue as $key => $val) {
         var_dump(substr($content, $val['opentag']['start_pos'], $val['length']));
         var_dump("--------------------------");
     } else {
-        var_dump("FALSE");
+        var_dump("FALSE"); // because it value
     }
 }
 

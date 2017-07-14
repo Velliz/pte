@@ -48,6 +48,7 @@ function parseLoop($content, &$pos, &$loops)
                 'type' => 'loop',
                 'begin' => $loops[$opentag]['start_pos'],
                 'end' => $loops[$closetag]['end_pos'],
+                'length' => $loops[$closetag]['end_pos'] - $loops[$opentag]['start_pos'],
                 'opentag' => $loops[$opentag],
                 'closetag' => $loops[$closetag],
             );
@@ -55,14 +56,12 @@ function parseLoop($content, &$pos, &$loops)
     }
 
     return $linkedKey;
-    //var_dump($linkedKey);
 }
 
 function parseVal($content, &$pos, &$loops)
 {
     while (preg_match('((?={!)([\s\S]*?}))', $content, $result, PREG_OFFSET_CAPTURE, $pos) > 0) {
         $spec = ($result[0]);
-        //todo: fix multiple same name
         $loops[$spec[0]] = array(
             'start_pos' => $spec[1],
             'end_pos' => $spec[1] + strlen($spec[0]),
@@ -88,11 +87,11 @@ function parseVal($content, &$pos, &$loops)
             'type' => 'value',
             'begin' => $loops[$opentag]['start_pos'],
             'end' => $loops[$opentag]['end_pos'],
-            'singletag' => $loops[$opentag],
+            'length' => $loops[$opentag]['end_pos'] - $loops[$opentag]['start_pos'],
+            //'singletag' => $loops[$opentag],
         );
     }
     return $linkedKey;
-    //var_dump($linkedKey);
 }
 
 

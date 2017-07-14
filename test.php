@@ -1,6 +1,6 @@
 <?php
 $content = file_get_contents("template/master.html");
-
+$contentLength = strlen($content);
 $pos = 0;
 
 $val = array();
@@ -16,7 +16,7 @@ foreach ($freshValue as $k => $v) {
     }
 }
 
-var_dump($freshValue);
+//var_dump($freshValue);
 
 function parseLoop($content, &$pos, &$loops)
 {
@@ -88,11 +88,82 @@ function parseVal($content, &$pos, &$loops)
             'begin' => $loops[$opentag]['start_pos'],
             'end' => $loops[$opentag]['end_pos'],
             'length' => $loops[$opentag]['end_pos'] - $loops[$opentag]['start_pos'],
-            //'singletag' => $loops[$opentag],
+            'opentag' => $loops[$opentag],
+            'closetag' => $loops[$opentag],
         );
     }
     return $linkedKey;
 }
+
+//AMBIL HTML PERCOBAAN 2 [WORKS FOR LOOPS]
+$trainCounter = 0;
+foreach ($freshValue as $key => $val) {
+    if ($val['type'] == 'loop') {
+        var_dump(substr($content, $val['opentag']['start_pos'], $val['length']));
+        var_dump("--------------------------");
+    } else {
+        var_dump("FALSE");
+    }
+}
+
+die();
+
+//AMBIL HTML PERCOBAAN 1
+$train = array();
+$trainCounter = 0;
+
+foreach ($freshValue as $key => $val) {
+    /*
+    $train[] = array(
+        'tags' => $key,
+        'element' => substr($content, $trainCounter, $val['begin']),
+        'specs' => $val,
+        'train' => $trainCounter,
+        'trainLength' => $val['begin'],
+    );
+    */
+
+    if ($val['type'] == 'loop') {
+
+        $train[] = array(
+            'tags' => $key,
+            'element' => substr($content, $trainCounter, ($val['begin'] - $trainCounter)),
+            'specs' => $val,
+            'train' => $trainCounter,
+            'trainLength' => $val['begin'],
+        );
+
+        $trainCounter = $val['opentag']['end_pos'];
+    }
+    if ($val['type'] == 'value') {
+
+        if ($trainCounter == 0) {
+            $train[] = array(
+                'tags' => $key,
+                'element' => substr($content, $trainCounter, $val['begin']),
+                'specs' => $val,
+                'train' => $trainCounter,
+                'trainLength' => $val['begin'],
+            );
+            $trainCounter = $val['end'];
+        } else {
+            $train[] = array(
+                'tags' => $key,
+                'element' => substr($content, $trainCounter, $val['begin'] - $trainCounter),
+                'specs' => $val,
+                'train' => $trainCounter,
+                'trainLength' => $val['begin'] - $trainCounter,
+            );
+            $trainCounter = $val['begin'] - $trainCounter;
+        }
+    }
+}
+
+foreach ($train as $key => $val) {
+    var_dump($val);
+}
+
+
 
 
 // 1 scan tag, type tag dan lokasi mulai s.d berahkir tag pada file

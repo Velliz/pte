@@ -4,10 +4,9 @@ namespace pte;
 interface ISlicer
 {
     /**
-     * preg_match with Named subpatterns
+     * preg_match with Named sub patterns
      */
-    const PATTERN_X = '@(?<A><!--)*(?<B>{)(?<C>[!|/])(?<D>[!])?(?<E>[a-zA-Z0-9\._-]+)(?:\((?<F>[\S\s]*?)\))?(?<G>})(?<H>-->)*@';
-    const PATTERN = '@(?<BO><!--)*(?<O>{)(?<Flag>[!|/])(?<Inverse>[!])?(?<Key>[a-zA-Z0-9\._-]+)(?:\((?<Parameter>[\S\s]*?)\))?(?<E>})(?<BE>-->)*@';
+    const PATTERN = '@(?<A><!--)*(?<B>{)(?<C>[!|/])(?<D>[!])?(?<E>[a-zA-Z0-9\._-]+)(?:\((?<F>[\S\s]*?)\))?(?<G>})(?<H>-->)*@';
 
     const BEFORE = 'A';
     const BEGIN = 'B';

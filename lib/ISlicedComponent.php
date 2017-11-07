@@ -14,5 +14,4 @@ interface ISlicedComponent
 
     public function Initialize();
 
-    public function ChildRender($childObject);
 }

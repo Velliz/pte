@@ -29,7 +29,9 @@ $data['Check'] = array(
 $output = array(
     'child' => array()
 );
-$parsedContent = $slicer->Lexer($template, $output['child']);
+$x = array();
+$pos = 0;
+$parsedContent = $slicer->Lexer($template, $x, $pos);
 var_dump($parsedContent);
 
 

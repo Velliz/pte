@@ -13,7 +13,8 @@ $template = new Fruits();
 $template->SetFruitMaster('template/master.html');
 $template->SetFruitBody('template/view.html');
 $template->SetFruitSegments('template/sidebar.html');
-//echo $template->GetFruitPack();
+echo $template->GetFruitPack();
+die();
 
 $slicer = new Slicer($template);
 $data['Tests'] = "testingnya";

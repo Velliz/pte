@@ -12,7 +12,7 @@ include 'vendor/autoload.php';
 $template = new Fruits();
 $template->SetFruitMaster('template/master.html');
 $template->SetFruitBody('template/view.html');
-$template->SetFruitSegments('template/sidebar.html');
+$template->AddFruitSegments('template/sidebar.html');
 echo $template->GetFruitPack();
 die();
 
@@ -31,4 +31,4 @@ $output = array(
     'child' => array()
 );
 $parsedContent = $slicer->Lexer($template);
-var_dump($parsedContent);
+//var_dump($parsedContent);

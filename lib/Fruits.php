@@ -16,19 +16,19 @@ class Fruits implements IFruits
 {
 
     /**
-     * @var string|bool
+     * @var string
      */
-    public $Template = null;
+    public $Template = "";
 
     /**
-     * @var string|bool
+     * @var string
      */
-    protected $Master = false;
+    private $Master = "";
 
     /**
-     * @var string|bool
+     * @var string
      */
-    protected $Body = false;
+    private $Body = "";
 
     /**
      * @var array|bool
@@ -43,6 +43,16 @@ class Fruits implements IFruits
      * )
      */
     protected $Segments = array();
+
+    /**
+     * @var bool
+     */
+    protected $UseMaster = true;
+
+    /**
+     * @var bool
+     */
+    protected $UseBody = true;
 
     public $Name;
 
@@ -82,7 +92,7 @@ class Fruits implements IFruits
         return true;
     }
 
-    public function SetFruitSegments($SegmentLocation)
+    public function AddFruitSegments($SegmentLocation)
     {
         $Segment = file_get_contents($SegmentLocation);
         if ($Segment === false) {
@@ -106,20 +116,18 @@ class Fruits implements IFruits
      */
     public function GetFruitPack()
     {
-        if (!$this->Master) {
-            if (!$this->Body) {
-                $this->Template = "";
-            } else {
-                foreach ($this->Segments as $Item) {
-                    $this->Body = preg_replace("({{" . $Item['Name'] . "}})", $Item['Data'], $this->Body);
-                }
-                $this->Template = $this->Body;
-            }
+        if (!$this->UseBody) {
+            $this->Template = "";
+            return $this->Template;
+        }
+        if (!$this->UseMaster) {
+            $this->Template = $this->Body;
         } else {
-            foreach ($this->Segments as $Item) {
-                $this->Master = preg_replace("({{" . $Item['Name'] . "}})", $Item['Data'], $this->Master);
-            }
             $this->Template = preg_replace(IFruits::CONTENT_IDENTIFIER, $this->Body, $this->Master);
+        }
+        foreach ($this->Segments as $Item) {
+            $keywords = sprintf("({{%s}})", $Item['Name']);
+            $this->Template = preg_replace($keywords, $Item['Data'], $this->Template);
         }
         return $this->Template;
     }

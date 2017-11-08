@@ -1,5 +1,5 @@
 <?php
-namespace pte;
+namespace pte\exception;
 
 use Exception;
 

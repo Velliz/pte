@@ -1,22 +1,23 @@
 <?php
 
-//TODO: index will moved to pte_environment
+//TODO: index will moved to pte
 
-use pte\Baskets;
-use pte\Fruits;
-use pte\Slicer2;
-use pte\Slicer;
+use pte\fruits\Fruits;
+use pte\slicer\Slicer;
 
 include 'vendor/autoload.php';
 
 $template = new Fruits();
+//$template->SetFruitMaster('template/plainmaster.html');
+//$template->SetFruitBody('template/plain.html');
 $template->SetFruitMaster('template/master.html');
 $template->SetFruitBody('template/view.html');
-$template->AddFruitSegments('template/sidebar.html');
-echo $template->GetFruitPack();
-die();
+//$template->AddFruitSegments('template/sidebar.html');
+//echo $template->GetFruitPack();
+//die();
 
-$slicer = new Slicer($template);
+$slicer = new Slicer();
+/*
 $data['Tests'] = "testingnya";
 $data['Check'] = array(
     'Pass' => 'test pass',
@@ -26,9 +27,8 @@ $data['Check'] = array(
         array('Pass' => 'Bob'),
     ),
 );
+*/
+$output = $template->GetFruitPack();
+$parsedContent = $slicer->Lexer($output);
 
-$output = array(
-    'child' => array()
-);
-$parsedContent = $slicer->Lexer($template);
-//var_dump($parsedContent);
+var_dump($parsedContent);

@@ -1,6 +1,10 @@
 <?php
-namespace pte;
+namespace pte\fruits;
 
+/**
+ * Interface IFruits
+ * @package pte\fruits
+ */
 interface IFruits
 {
 

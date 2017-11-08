@@ -2,11 +2,18 @@
 
 namespace pte\utility;
 
-use pte\ISlicer;
+use pte\slicer\ISlicer;
 
+/**
+ * Class PregOffsetCapture
+ * @package pte\utility
+ */
 class PregOffsetCapture
 {
 
+    /**
+     * @var array
+     */
     private $RawPregData;
 
     public function __construct($RawPregData)

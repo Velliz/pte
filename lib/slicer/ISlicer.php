@@ -1,10 +1,14 @@
 <?php
-namespace pte;
+namespace pte\slicer;
 
+/**
+ * Interface ISlicer
+ * @package pte
+ */
 interface ISlicer
 {
     /**
-     * preg_match with Named sub patterns
+     * Preg Match using regex with named sub patterns
      */
     const PATTERN = '@(?<A><!--)*(?<B>{)(?<C>[!|/])(?<D>[!])?(?<E>[a-zA-Z0-9\._-]+)(?:\((?<F>[\S\s]*?)\))?(?<G>})(?<H>-->)*@';
 

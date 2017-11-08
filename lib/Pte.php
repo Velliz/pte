@@ -1,36 +1,82 @@
 <?php
+
 namespace pte;
 
-class Pte implements ISlicedComponent
+use pte\fruits\IFruits;
+
+class Pte
 {
 
-    public function SetComponent($FruitSegments)
+    const PTE_VERSION = '0.1.0-alpha';
+
+    const MASTER_TRUE = true;
+    const MASTER_FALSE = false;
+    const HTML_TRUE = true;
+    const HTML_FALSE = false;
+
+    /**
+     * @var string
+     */
+    public $_HtmlData;
+
+    /**
+     * @var string
+     */
+    public $_MasterData;
+
+    public $_Value;
+
+    public $_View = array();
+
+    public $_Token = array();
+
+    /**
+     * template constructor.
+     */
+    public function __construct()
     {
-        // TODO: Implement SetComponent() method.
+
     }
 
-    public function GetComponent()
+    public function SetHtml($Html = null)
     {
-        // TODO: Implement GetComponent() method.
+        $this->_HtmlData = $Html;
     }
 
-    public function GetName()
+    public function SetMaster($Master = null)
     {
-        // TODO: Implement GetName() method.
+        $this->_MasterData = $Master;
     }
 
-    public function Output()
+    public function SetValue($Value = array())
     {
-        // TODO: Implement Output() method.
+        $this->_Value = $Value;
     }
 
-    public function Initialize()
+    public function SetView($Value = null)
     {
-        // TODO: Implement Initialize() method.
+        array_push($this->_View, $Value);
     }
 
-    public function ChildRender($childObject)
+    public function Output($IsCached = false, $IsHtml = true, $IsMaster = false)
     {
-        // TODO: Implement ChildRender() method.
+        $HtmlFile = $MasterFile = $Template = null;
+        if ($IsHtml) {
+            $Template = file_get_contents($this->_HtmlData);
+        }
+        if ($IsMaster) {
+            $Template = $this->Replace(IFruits::CONTENT_IDENTIFIER, $Template, file_get_contents($this->_MasterData));
+        }
+        foreach ($this->_View as $Segment) {
+            $Template = $this->Replace('({{'.$Segment.'}})', file_get_contents($Segment), $Template);
+        }
+
+        echo $Template;
+
+    }
+
+    private function Replace($regex, $replacement, $source)
+    {
+        return preg_replace($regex, $replacement, $source);
     }
 }

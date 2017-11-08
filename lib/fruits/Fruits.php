@@ -1,6 +1,8 @@
 <?php
 
-namespace pte;
+namespace pte\fruits;
+
+use pte\exception\PteException;
 
 /**
  * Class Fruits

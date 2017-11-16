@@ -9,7 +9,7 @@ $pte->SetMaster('template/master.html');
 $pte->SetHtml('template/view.html');
 
 $pte->SetValue(array(
-    'Lingkaran1' => 'Test Lingkaran 1',
+    'Lingkaran1' => 'XYZ 123',
 ));
 
 $pte->Output();

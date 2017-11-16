@@ -68,11 +68,11 @@ class Slicer
 
             $position = $lex['end'];
 
-            if ($capture->Capture(ISlicer::FLAG) === '/') {
+            if ($capture->Capture(ISlicer::FLAG) === ISlicer::C_CLOSE) {
                 $output[] = $lex;
                 break;
             }
-            if ($capture->Capture(ISlicer::BEFORE) === '<!--' && $capture->Capture(ISlicer::AFTER) === '-->') {
+            if ($capture->Capture(ISlicer::BEFORE) === ISlicer::A && $capture->Capture(ISlicer::AFTER) === ISlicer::H) {
                 $this->PregCapture($template, $lex['child'], $position);
             } else {
                 unset($lex['child']);

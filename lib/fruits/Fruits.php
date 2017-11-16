@@ -49,27 +49,44 @@ class Fruits implements IFruits
     /**
      * @var bool
      */
-    protected $UseMaster = true;
+    protected $UseMaster;
 
     /**
      * @var bool
      */
-    protected $UseBody = true;
+    protected $UseBody;
 
+    /**
+     * @var string
+     */
     public $Name;
 
+    /**
+     * @var string
+     */
     public $Extension;
 
+    /**
+     * @var string
+     */
     protected $Location;
 
     /**
      * RawTemplate constructor.
+     * @param $UseMaster
+     * @param $UseBody
      */
-    public function __construct()
+    public function __construct($UseMaster = true, $UseBody = true)
     {
-
+        $this->UseMaster = $UseMaster;
+        $this->UseBody = $UseBody;
     }
 
+    /**
+     * @param $MasterLocation
+     * @return bool
+     * @throws PteException
+     */
     public function SetFruitMaster($MasterLocation)
     {
         $Master = file_get_contents($MasterLocation);
@@ -80,7 +97,11 @@ class Fruits implements IFruits
         return true;
     }
 
-
+    /**
+     * @param $bodyLocation
+     * @return bool
+     * @throws PteException
+     */
     public function SetFruitBody($bodyLocation)
     {
         $Body = file_get_contents($bodyLocation);
@@ -94,6 +115,11 @@ class Fruits implements IFruits
         return true;
     }
 
+    /**
+     * @param $SegmentLocation
+     * @return bool
+     * @throws PteException
+     */
     public function AddFruitSegments($SegmentLocation)
     {
         $Segment = file_get_contents($SegmentLocation);
@@ -150,17 +176,26 @@ class Fruits implements IFruits
         return strlen($this->Template);
     }
 
-    public function GetFruitExtension()
-    {
-        return $this->Extension;
-    }
-
+    /**
+     * @return string
+     */
     public function GetName()
     {
         return $this->Name;
     }
 
-    public function GetFileLocation()
+    /**
+     * @return string
+     */
+    public function GetBodyFileExtension()
+    {
+        return $this->Extension;
+    }
+
+    /**
+     * @return string
+     */
+    public function GetBodyFileLocation()
     {
         return $this->Location;
     }

@@ -1,34 +1,15 @@
 <?php
 
-//TODO: index will moved to pte
-
-use pte\fruits\Fruits;
-use pte\slicer\Slicer;
+use pte\Pte;
 
 include 'vendor/autoload.php';
 
-$template = new Fruits();
-//$template->SetFruitMaster('template/plainmaster.html');
-//$template->SetFruitBody('template/plain.html');
-$template->SetFruitMaster('template/master.html');
-$template->SetFruitBody('template/view.html');
-//$template->AddFruitSegments('template/sidebar.html');
-//echo $template->GetFruitPack();
-//die();
+$pte = new Pte();
+$pte->SetMaster('template/master.html');
+$pte->SetHtml('template/view.html');
 
-$slicer = new Slicer();
-/*
-$data['Tests'] = "testingnya";
-$data['Check'] = array(
-    'Pass' => 'test pass',
-    'Bts' => array(
-        array('Pass' => 'Jin'),
-        array('Pass' => 'Kevin'),
-        array('Pass' => 'Bob'),
-    ),
-);
-*/
-$output = $template->GetFruitPack();
-$parsedContent = $slicer->Lexer($output);
+$pte->SetValue(array(
+    'Lingkaran1' => 'Test Lingkaran 1',
+));
 
-var_dump($parsedContent);
+$pte->Output();

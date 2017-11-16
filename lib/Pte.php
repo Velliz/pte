@@ -2,17 +2,25 @@
 
 namespace pte;
 
-use pte\fruits\IFruits;
+use pte\fruits\Fruits;
+use pte\slicer\Slicer;
 
+/**
+ * Class Pte
+ * @package pte
+ */
 class Pte
 {
 
-    const PTE_VERSION = '0.1.0-alpha';
+    const VERSION = '0.1.0';
 
-    const MASTER_TRUE = true;
-    const MASTER_FALSE = false;
-    const HTML_TRUE = true;
-    const HTML_FALSE = false;
+    const VIEW_HTML = 1;
+    const VIEW_JSON = 2;
+    const VIEW_XML = 3;
+    const VIEW_NULL = 4;
+
+    var $MASTER = true;
+    var $HTML = true;
 
     /**
      * @var string
@@ -24,19 +32,10 @@ class Pte
      */
     public $_MasterData;
 
-    public $_Value;
-
-    public $_View = array();
-
-    public $_Token = array();
-
     /**
-     * template constructor.
+     * @var array
      */
-    public function __construct()
-    {
-
-    }
+    public $_Value = array();
 
     public function SetHtml($Html = null)
     {
@@ -53,30 +52,92 @@ class Pte
         $this->_Value = $Value;
     }
 
-    public function SetView($Value = null)
+    public function Output($Type = Pte::VIEW_HTML, $Segments = array())
     {
-        array_push($this->_View, $Value);
-    }
+        $template = new Fruits();
+        $template->SetFruitMaster($this->_MasterData);
+        $template->SetFruitBody($this->_HtmlData);
 
-    public function Output($IsCached = false, $IsHtml = true, $IsMaster = false)
-    {
-        $HtmlFile = $MasterFile = $Template = null;
-        if ($IsHtml) {
-            $Template = file_get_contents($this->_HtmlData);
-        }
-        if ($IsMaster) {
-            $Template = $this->Replace(IFruits::CONTENT_IDENTIFIER, $Template, file_get_contents($this->_MasterData));
-        }
-        foreach ($this->_View as $Segment) {
-            $Template = $this->Replace('({{'.$Segment.'}})', file_get_contents($Segment), $Template);
+        foreach ($Segments as $key => $val) {
+            $template->AddFruitSegments($val);
         }
 
-        echo $Template;
+        $slicer = new Slicer();
+        $Content = $slicer->Lexer($template->GetFruitPack());
 
+        header('Author: Puko Framework');
+
+        switch ($Type) {
+            case Pte::VIEW_HTML:
+                echo $this->RenderHtml($Content, $this->_Value);
+                break;
+            case Pte::VIEW_JSON:
+                echo $this->RenderJson($this->_Value);
+                break;
+            case Pte::VIEW_XML:
+                echo $this->RenderXml($this->_Value);
+                break;
+            case Pte::VIEW_NULL:
+                exit();
+                break;
+        }
     }
 
-    private function Replace($regex, $replacement, $source)
+    /**
+     * @param $Content
+     * @param $Data
+     *
+     * @return string
+     */
+    public function RenderHtml(&$Content, &$Data)
     {
-        return preg_replace($regex, $replacement, $source);
+        header('Content-Type: text/html');
+
+        $String = "";
+
+        foreach ($Content as $key => $val) {
+
+            $String .= $val['text'];
+
+            //todo: render html feature
+
+            if (isset($val['child'])) {
+                $this->RenderHtml($val['child'], $Data);
+            }
+            var_dump($val);
+
+//            $String .= $Data[$key][$val['key']];
+//            if (is_array($val)) {
+//                $this->RenderHtml($val, $Data);
+//            }
+        }
+
+        echo $String;
+        die();
+
+        return $String;
     }
+
+    /**
+     * @param $Data
+     *
+     * @return string
+     */
+    public function RenderJson(&$Data)
+    {
+        header('Content-Type: application/json');
+        return json_encode($Data);
+    }
+
+    /**
+     * @param $Data
+     *
+     * @return string
+     */
+    public function RenderXml(&$Data)
+    {
+        header('Content-Type: application/xml');
+        return xmlrpc_encode($Data);
+    }
+
 }

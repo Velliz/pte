@@ -21,4 +21,13 @@ interface ISlicer
     const END = 'G';
     const AFTER = 'H';
 
+    const A = '<!--';
+    const B = '{';
+    const C_OPEN = '!';
+    const C_CLOSE = '/';
+    const D = '!';
+    const E = false;
+    const F = false;
+    const G = '}';
+    const H = '-->';
 }

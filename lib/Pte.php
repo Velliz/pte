@@ -33,6 +33,11 @@ class Pte
     public $_MasterData;
 
     /**
+     * @var string
+     */
+    private $_Output = "";
+
+    /**
      * @var array
      */
     public $_Value = array();
@@ -93,29 +98,14 @@ class Pte
     {
         header('Content-Type: text/html');
 
-        $String = "";
-
         foreach ($Content as $key => $val) {
-
-            $String .= $val['text'];
-
-            //todo: render html feature
-
+            $this->_Output .= $val['text'];
             if (isset($val['child'])) {
-                $this->RenderHtml($val['child'], $Data);
+                $this->RenderHtml($val['child'], $SubData);
             }
-            var_dump($val);
-
-//            $String .= $Data[$key][$val['key']];
-//            if (is_array($val)) {
-//                $this->RenderHtml($val, $Data);
-//            }
         }
 
-        echo $String;
-        die();
-
-        return $String;
+        return $this->_Output;
     }
 
     /**

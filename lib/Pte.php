@@ -101,8 +101,12 @@ class Pte
         foreach ($Content as $key => $val) {
             $this->_Output .= $val['text'];
             $this->_Output .= " ";
-            if (isset($Data[$val['key']]) && !is_array($Data[$val['key']])) {
-                $this->_Output .= $Data[$val['key']];
+            if (isset($Data[$val['key']])) {
+                if (!is_array($Data[$val['key']])) {
+                    $this->_Output .= $Data[$val['key']];
+                } else {
+                    //var_dump($Data[$val['key']]);
+                }
             }
             if (isset($val['child'])) {
                 $this->RenderHtml($val['child'], $Data);

@@ -10,12 +10,21 @@ $pte->SetHtml('template/view.html');
 
 $pte->SetValue(array(
     'FirstCircle' => 'Selamat Datang !',
-    'Check' => array(),
-    'WishList' => array(
-        'Lingkaran' => 'Bulat Sempurna',
-        'Anak' => array(),
+    'Check' => array(
+        array(
+            'WishList' => array(
+                'Lingkaran' => 'Bulat Sempurna',
+                'Anak' => array(
+                    'Umur' => 19,
+                    'Anak' => array(
+                        'Umur' => 4,
+                    ),
+                ),
+            ),
+        ),
     ),
-    'navilera1' => 'GFriend Band'
+    'navilera1' => 'GFriend Band',
+    'Umur' => 23
 ));
 
 $pte->Output();

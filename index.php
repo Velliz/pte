@@ -9,7 +9,13 @@ $pte->SetMaster('template/master.html');
 $pte->SetHtml('template/view.html');
 
 $pte->SetValue(array(
-    'Lingkaran1' => 'XYZ 123',
+    'FirstCircle' => 'Selamat Datang !',
+    'Check' => array(),
+    'WishList' => array(
+        'Lingkaran' => 'Bulat Sempurna',
+        'Anak' => array(),
+    ),
+    'navilera1' => 'GFriend Band'
 ));
 
 $pte->Output();

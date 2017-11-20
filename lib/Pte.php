@@ -99,14 +99,13 @@ class Pte
         header('Content-Type: text/html');
 
         foreach ($Content as $key => $val) {
-
-            $this->_Output .= $val['text'] . "\n";
-            if(isset($Data[$val['key']])) {
+            $this->_Output .= $val['text'];
+            $this->_Output .= " ";
+            if (isset($Data[$val['key']]) && !is_array($Data[$val['key']])) {
                 $this->_Output .= $Data[$val['key']];
             }
-
             if (isset($val['child'])) {
-                $this->RenderHtml($val['child'], $SubData);
+                $this->RenderHtml($val['child'], $Data);
             }
         }
 

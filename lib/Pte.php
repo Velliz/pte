@@ -14,6 +14,13 @@ class Pte
 
     const VERSION = '0.1.0';
 
+    protected $ARRAYS = 0;
+    protected $STRINGS = 1;
+    protected $BOOLEANS = 2;
+    protected $NULLS = 4;
+    protected $NUMERIC = 5;
+    protected $UNDEFINED = 6;
+
     const VIEW_HTML = 1;
     const VIEW_JSON = 2;
     const VIEW_XML = 3;
@@ -93,24 +100,51 @@ class Pte
      * @param $Data
      *
      * @return string
+     *
+     * content is template in array format
+     * data is returned date from controller
      */
     public function RenderHtml(&$Content, &$Data)
     {
         header('Content-Type: text/html');
 
         foreach ($Content as $key => $val) {
-            $this->_Output .= $val['text'];
-            $this->_Output .= " ";
-            if (isset($Data[$val['key']])) {
-                if (!is_array($Data[$val['key']])) {
-                    $this->_Output .= $Data[$val['key']];
-                } else {
-                    //var_dump($Data[$val['key']]);
-                }
+
+            $this->_Output .= $val['text'] . "\n";
+
+            $datum = isset($Data[$val['key']]) ? $Data[$val['key']] : null;
+            $hasChild = isset($val['child']) ? true : false;
+
+            switch ($this->GetVarType($datum)) {
+                case $this->ARRAYS:
+                    foreach ($datum as $k => $v) {
+                        $this->RenderHtml($val['child'], $v);
+                    }
+                    break;
+                case $this->NUMERIC:
+                    $this->_Output .= (double) $Data[$val['key']];
+                    break;
+                case $this->STRINGS:
+                    $this->_Output .= (string) $Data[$val['key']];
+                    break;
+                case $this->BOOLEANS:
+                    //todo: handle bool
+                    break;
+                case $this->NULLS:
+                    //todo: handle nulls
+                    break;
+                case $this->UNDEFINED:
+                    //todo: handle undefined
+                    break;
+                default:
+                    //todo: handle unknown/class data type
+                    break;
             }
-            if (isset($val['child'])) {
-                $this->RenderHtml($val['child'], $Data);
+
+            if ($hasChild) {
+                $this->RenderHtml($val['child'], $datum);
             }
+
         }
 
         return $this->_Output;
@@ -138,4 +172,24 @@ class Pte
         return xmlrpc_encode($Data);
     }
 
+    protected function GetVarType($var)
+    {
+        if (is_array($var)) {
+            return $this->ARRAYS;
+        }
+        if (is_null($var)) {
+            return $this->NULLS;
+        }
+        if (is_string($var)) {
+            return $this->STRINGS;
+        }
+        if (is_bool($var)) {
+            return $this->BOOLEANS;
+        }
+        if (is_numeric($var)) {
+            return $this->NUMERIC;
+        } else {
+            return $this->UNDEFINED;
+        }
+    }
 }

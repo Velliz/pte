@@ -4,52 +4,37 @@
     <title>Page {!FirstCircle}</title>
 </head>
 <body>
-<!--{!Check}-->
 <h1>Welcome to site {!Pass}</h1>
 <p>Today will be preparation</p>
 
-{!set_part('PageRightPanel')}
-
 Wish List 1
 
-{!view()}
-
+<hr>
 <!--{!WishList}-->
-    <p>Coba-coba</p>
-    <p>{!Lingkaran}</p>
+    <p>Mulai terjemahan - {!Lingkaran}</p>
     <!--{!Anak}-->
-        <div>{!Umur}</div>
+        <div>Ini anak pertama umur - {!Umur}</div>
+
         <!--{!Anak}-->
-            <div>{!Umur}</div>
+            <div>Ini anak kedua umur - {!Umur}</div>
         <!--{/Anak}-->
-        <div>{!Umur}</div>
+
+        <div>Ini anak pertama umur - {!Umur}</div>
+
     <!--{/Anak}-->
     <p>Sekilan</p>
 <!--{/Wishlist1}-->
-
+<hr>
 <!--{!Wishlist2}-->
-<p>Aku Testing dulu Whistlist 2</p>
+<p>Aku Testing dulu Whistlist 2 {!val}</p>
 <!--{/Wishlist2}-->
 
-<div>Keren aja</div>
+{{CONTENT}}
 
 band1: {!navilera1}
 
 {!view(sidebar.html)}
 
-<p class="footer">Didit Velliz 2017</p>
-<!--{/Check}-->
-
-{!code(JS)}
-
-<!--{!code(JS)}-->
-<link href="{URL}assets/vendors/bootstrap-daterangepicker/daterangepicker.css" rel="stylesheet">
-<link href="{URL}assets/vendors/bootstrap-datetimepicker/build/css/bootstrap-datetimepicker.css" rel="stylesheet">
-<link href="{URL}assets/vendors/switchery/dist/switchery.min.css" rel="stylesheet">
-
-<link href="{URL}assets/vendors/select2/dist/css/select2.min.css" rel="stylesheet">
-<link href="{URL}assets/vendors/select2/dist/css/select2-bootstrap.min.css" rel="stylesheet">
-<!--{/code(JS)}-->
 </body>
 </html>
 

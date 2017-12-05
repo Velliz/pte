@@ -19,7 +19,8 @@ class Pte
     protected $BOOLEANS = 2;
     protected $NULLS = 4;
     protected $NUMERIC = 5;
-    protected $UNDEFINED = 6;
+    protected $OBJECTS = 6;
+    protected $UNDEFINED = 7;
 
     const VIEW_HTML = 1;
     const VIEW_JSON = 2;
@@ -99,7 +100,7 @@ class Pte
      * @param $Content
      * @param $Data
      *
-     * @return string
+     * @return string content is template in array format
      *
      * content is template in array format
      * data is returned date from controller
@@ -110,10 +111,14 @@ class Pte
 
         foreach ($Content as $key => $val) {
 
-            $this->_Output .= $val['text'] . "\n";
-
             $datum = isset($Data[$val['key']]) ? $Data[$val['key']] : null;
             $hasChild = isset($val['child']) ? true : false;
+
+            $this->_Output .= $val['text'] . "\n";
+
+            if ($val['flag'] === '/') {
+                break;
+            }
 
             switch ($this->GetVarType($datum)) {
                 case $this->ARRAYS:
@@ -130,6 +135,9 @@ class Pte
                 case $this->BOOLEANS:
                     //todo: handle bool
                     break;
+                case $this->OBJECTS:
+                    //todo: handle objects
+                    break;
                 case $this->NULLS:
                     //todo: handle nulls
                     break;
@@ -140,11 +148,11 @@ class Pte
                     //todo: handle unknown/class data type
                     break;
             }
-
             if ($hasChild) {
                 $this->RenderHtml($val['child'], $datum);
             }
 
+            $Content[$key] = $val;
         }
 
         return $this->_Output;

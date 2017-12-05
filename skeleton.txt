@@ -1,12 +1,15 @@
-array(5) {
+array(15) {
   [0]=>
   array(8) {
     ["text"]=>
-    string(44) "<!DOCTYPE html><html><head><title>"
+    string(48) "<!DOCTYPE html>
+<html>
+<head>
+    <title>Page"
     ["start"]=>
-    int(44)
+    int(49)
     ["end"]=>
-    int(58)
+    int(63)
     ["length"]=>
     int(14)
     ["flag"]=>
@@ -19,255 +22,165 @@ array(5) {
     bool(false)
   }
   [1]=>
-  array(9) {
+  array(8) {
     ["text"]=>
-    string(25) "</title></head><body>"
+    string(46) "</title>
+</head>
+<body>
+<h1>Welcome to site"
     ["start"]=>
-    int(85)
+    int(110)
     ["end"]=>
-    int(100)
+    int(117)
     ["length"]=>
-    int(15)
+    int(7)
     ["flag"]=>
     string(1) "!"
     ["inverse"]=>
     bool(false)
     ["key"]=>
-    string(5) "Check"
+    string(4) "Pass"
+    ["param"]=>
+    bool(false)
+  }
+  [2]=>
+  array(9) {
+    ["text"]=>
+    string(62) "</h1>
+<p>Today will be preparation</p>
+
+Wish List 1
+
+<hr>"
+    ["start"]=>
+    int(181)
+    ["end"]=>
+    int(199)
+    ["length"]=>
+    int(18)
+    ["flag"]=>
+    string(1) "!"
+    ["inverse"]=>
+    bool(false)
+    ["key"]=>
+    string(8) "WishList"
     ["param"]=>
     bool(false)
     ["child"]=>
-    array(8) {
+    array(3) {
       [0]=>
       array(8) {
         ["text"]=>
-        string(19) "<h1>Welcome to site"
+        string(21) "<p>Mulai terjemahan -"
         ["start"]=>
-        int(122)
+        int(227)
         ["end"]=>
-        int(129)
+        int(239)
         ["length"]=>
-        int(7)
+        int(12)
         ["flag"]=>
         string(1) "!"
         ["inverse"]=>
         bool(false)
         ["key"]=>
-        string(4) "Pass"
+        string(9) "Lingkaran"
         ["param"]=>
         bool(false)
       }
       [1]=>
-      array(8) {
-        ["text"]=>
-        string(39) "</h1><p>Today will be preparation</p>"
-        ["start"]=>
-        int(172)
-        ["end"]=>
-        int(201)
-        ["length"]=>
-        int(29)
-        ["flag"]=>
-        string(1) "!"
-        ["inverse"]=>
-        bool(false)
-        ["key"]=>
-        string(8) "set_part"
-        ["param"]=>
-        string(16) "'PageRightPanel'"
-      }
-      [2]=>
-      array(8) {
-        ["text"]=>
-        string(11) "Wish List 1"
-        ["start"]=>
-        int(220)
-        ["end"]=>
-        int(229)
-        ["length"]=>
-        int(9)
-        ["flag"]=>
-        string(1) "!"
-        ["inverse"]=>
-        bool(false)
-        ["key"]=>
-        string(4) "view"
-        ["param"]=>
-        bool(false)
-      }
-      [3]=>
       array(9) {
         ["text"]=>
-        string(0) ""
+        string(4) "</p>"
         ["start"]=>
-        int(233)
+        int(249)
         ["end"]=>
-        int(251)
+        int(263)
         ["length"]=>
-        int(18)
+        int(14)
         ["flag"]=>
         string(1) "!"
         ["inverse"]=>
         bool(false)
         ["key"]=>
-        string(8) "WishList"
+        string(4) "Anak"
         ["param"]=>
         bool(false)
         ["child"]=>
-        array(3) {
+        array(4) {
           [0]=>
           array(8) {
             ["text"]=>
-            string(25) "<p>Coba-coba</p><p>"
+            string(22) "<div>Ini anak 1 umur -"
             ["start"]=>
-            int(282)
+            int(296)
             ["end"]=>
-            int(294)
+            int(303)
             ["length"]=>
-            int(12)
+            int(7)
             ["flag"]=>
             string(1) "!"
             ["inverse"]=>
             bool(false)
             ["key"]=>
-            string(9) "Lingkaran"
+            string(4) "Umur"
             ["param"]=>
             bool(false)
           }
           [1]=>
           array(9) {
             ["text"]=>
-            string(4) "</p>"
+            string(6) "</div>"
             ["start"]=>
-            int(304)
+            int(321)
             ["end"]=>
-            int(318)
+            int(336)
             ["length"]=>
-            int(14)
+            int(15)
             ["flag"]=>
             string(1) "!"
             ["inverse"]=>
             bool(false)
             ["key"]=>
-            string(4) "Anak"
+            string(5) "Anak2"
             ["param"]=>
             bool(false)
             ["child"]=>
-            array(4) {
+            array(2) {
               [0]=>
               array(8) {
                 ["text"]=>
-                string(5) "<div>"
+                string(22) "<div>Ini anak 2 umur -"
                 ["start"]=>
-                int(333)
+                int(373)
                 ["end"]=>
-                int(340)
+                int(381)
                 ["length"]=>
-                int(7)
+                int(8)
                 ["flag"]=>
                 string(1) "!"
                 ["inverse"]=>
                 bool(false)
                 ["key"]=>
-                string(4) "Umur"
+                string(5) "Umur2"
                 ["param"]=>
                 bool(false)
               }
               [1]=>
-              array(9) {
-                ["text"]=>
-                string(6) "</div>"
-                ["start"]=>
-                int(356)
-                ["end"]=>
-                int(370)
-                ["length"]=>
-                int(14)
-                ["flag"]=>
-                string(1) "!"
-                ["inverse"]=>
-                bool(false)
-                ["key"]=>
-                string(4) "Anak"
-                ["param"]=>
-                bool(false)
-                ["child"]=>
-                array(2) {
-                  [0]=>
-                  array(8) {
-                    ["text"]=>
-                    string(5) "<div>"
-                    ["start"]=>
-                    int(389)
-                    ["end"]=>
-                    int(396)
-                    ["length"]=>
-                    int(7)
-                    ["flag"]=>
-                    string(1) "!"
-                    ["inverse"]=>
-                    bool(false)
-                    ["key"]=>
-                    string(4) "Umur"
-                    ["param"]=>
-                    bool(false)
-                  }
-                  [1]=>
-                  array(8) {
-                    ["text"]=>
-                    string(6) "</div>"
-                    ["start"]=>
-                    int(412)
-                    ["end"]=>
-                    int(426)
-                    ["length"]=>
-                    int(14)
-                    ["flag"]=>
-                    string(1) "/"
-                    ["inverse"]=>
-                    bool(false)
-                    ["key"]=>
-                    string(4) "Anak"
-                    ["param"]=>
-                    bool(false)
-                  }
-                }
-              }
-              [2]=>
-              array(8) {
-                ["text"]=>
-                string(5) "<div>"
-                ["start"]=>
-                int(441)
-                ["end"]=>
-                int(448)
-                ["length"]=>
-                int(7)
-                ["flag"]=>
-                string(1) "!"
-                ["inverse"]=>
-                bool(false)
-                ["key"]=>
-                string(4) "Umur"
-                ["param"]=>
-                bool(false)
-              }
-              [3]=>
               array(8) {
                 ["text"]=>
                 string(6) "</div>"
                 ["start"]=>
-                int(460)
+                int(397)
                 ["end"]=>
-                int(474)
+                int(412)
                 ["length"]=>
-                int(14)
+                int(15)
                 ["flag"]=>
                 string(1) "/"
                 ["inverse"]=>
                 bool(false)
                 ["key"]=>
-                string(4) "Anak"
+                string(5) "Anak2"
                 ["param"]=>
                 bool(false)
               }
@@ -276,171 +189,52 @@ array(5) {
           [2]=>
           array(8) {
             ["text"]=>
-            string(14) "<p>Sekilan</p>"
+            string(29) "<div>Ini ulangi anak 1 umur -"
             ["start"]=>
-            int(496)
+            int(454)
             ["end"]=>
-            int(515)
+            int(461)
             ["length"]=>
-            int(19)
+            int(7)
+            ["flag"]=>
+            string(1) "!"
+            ["inverse"]=>
+            bool(false)
+            ["key"]=>
+            string(4) "Umur"
+            ["param"]=>
+            bool(false)
+          }
+          [3]=>
+          array(8) {
+            ["text"]=>
+            string(6) "</div>"
+            ["start"]=>
+            int(475)
+            ["end"]=>
+            int(489)
+            ["length"]=>
+            int(14)
             ["flag"]=>
             string(1) "/"
             ["inverse"]=>
             bool(false)
             ["key"]=>
-            string(9) "Wishlist1"
+            string(4) "Anak"
             ["param"]=>
             bool(false)
           }
         }
       }
-      [4]=>
-      array(9) {
+      [2]=>
+      array(8) {
         ["text"]=>
-        string(0) ""
+        string(22) "<h1>Sekilan</h1>
+<br>"
         ["start"]=>
         int(519)
         ["end"]=>
-        int(538)
-        ["length"]=>
-        int(19)
-        ["flag"]=>
-        string(1) "!"
-        ["inverse"]=>
-        bool(false)
-        ["key"]=>
-        string(9) "Wishlist2"
-        ["param"]=>
-        bool(false)
-        ["child"]=>
-        array(1) {
-          [0]=>
-          array(8) {
-            ["text"]=>
-            string(35) "<p>Aku Testing dulu Whistlist 2</p>"
-            ["start"]=>
-            int(577)
-            ["end"]=>
-            int(596)
-            ["length"]=>
-            int(19)
-            ["flag"]=>
-            string(1) "/"
-            ["inverse"]=>
-            bool(false)
-            ["key"]=>
-            string(9) "Wishlist2"
-            ["param"]=>
-            bool(false)
-          }
-        }
-      }
-      [5]=>
-      array(8) {
-        ["text"]=>
-        string(30) "<div>Keren aja</div>band1:"
-        ["start"]=>
-        int(631)
-        ["end"]=>
-        int(643)
-        ["length"]=>
-        int(12)
-        ["flag"]=>
-        string(1) "!"
-        ["inverse"]=>
-        bool(false)
-        ["key"]=>
-        string(9) "navilera1"
-        ["param"]=>
-        bool(false)
-      }
-      [6]=>
-      array(8) {
-        ["text"]=>
-        string(0) ""
-        ["start"]=>
-        int(647)
-        ["end"]=>
-        int(668)
-        ["length"]=>
-        int(21)
-        ["flag"]=>
-        string(1) "!"
-        ["inverse"]=>
-        bool(false)
-        ["key"]=>
-        string(4) "view"
-        ["param"]=>
-        string(12) "sidebar.html"
-      }
-      [7]=>
-      array(8) {
-        ["text"]=>
-        string(39) "<p class="footer">Didit Velliz 2017</p>"
-        ["start"]=>
-        int(713)
-        ["end"]=>
-        int(728)
-        ["length"]=>
-        int(15)
-        ["flag"]=>
-        string(1) "/"
-        ["inverse"]=>
-        bool(false)
-        ["key"]=>
-        string(5) "Check"
-        ["param"]=>
-        bool(false)
-      }
-    }
-  }
-  [2]=>
-  array(8) {
-    ["text"]=>
-    string(0) ""
-    ["start"]=>
-    int(732)
-    ["end"]=>
-    int(743)
-    ["length"]=>
-    int(11)
-    ["flag"]=>
-    string(1) "!"
-    ["inverse"]=>
-    bool(false)
-    ["key"]=>
-    string(4) "code"
-    ["param"]=>
-    string(2) "JS"
-  }
-  [3]=>
-  array(9) {
-    ["text"]=>
-    string(0) ""
-    ["start"]=>
-    int(747)
-    ["end"]=>
-    int(765)
-    ["length"]=>
-    int(18)
-    ["flag"]=>
-    string(1) "!"
-    ["inverse"]=>
-    bool(false)
-    ["key"]=>
-    string(4) "code"
-    ["param"]=>
-    string(2) "JS"
-    ["child"]=>
-    array(1) {
-      [0]=>
-      array(8) {
-        ["text"]=>
-        string(479) "<link href="{URL}assets/vendors/bootstrap-daterangepicker/daterangepicker.css" rel="stylesheet">"
-        ["start"]=>
-        int(1248)
-        ["end"]=>
-        int(1266)
+        int(537)
         ["length"]=>
         int(18)
         ["flag"]=>
@@ -448,22 +242,409 @@ array(5) {
         ["inverse"]=>
         bool(false)
         ["key"]=>
-        string(4) "code"
+        string(8) "Wishlist"
         ["param"]=>
-        string(2) "JS"
+        bool(false)
+      }
+    }
+  }
+  [3]=>
+  array(9) {
+    ["text"]=>
+    string(4) "<hr>"
+    ["start"]=>
+    int(545)
+    ["end"]=>
+    int(564)
+    ["length"]=>
+    int(19)
+    ["flag"]=>
+    string(1) "!"
+    ["inverse"]=>
+    bool(false)
+    ["key"]=>
+    string(9) "Wishlist2"
+    ["param"]=>
+    bool(false)
+    ["child"]=>
+    array(2) {
+      [0]=>
+      array(8) {
+        ["text"]=>
+        string(31) "<p>Aku Testing dulu Whistlist 2"
+        ["start"]=>
+        int(598)
+        ["end"]=>
+        int(604)
+        ["length"]=>
+        int(6)
+        ["flag"]=>
+        string(1) "!"
+        ["inverse"]=>
+        bool(false)
+        ["key"]=>
+        string(3) "val"
+        ["param"]=>
+        bool(false)
+      }
+      [1]=>
+      array(8) {
+        ["text"]=>
+        string(4) "</p>"
+        ["start"]=>
+        int(610)
+        ["end"]=>
+        int(629)
+        ["length"]=>
+        int(19)
+        ["flag"]=>
+        string(1) "/"
+        ["inverse"]=>
+        bool(false)
+        ["key"]=>
+        string(9) "Wishlist2"
+        ["param"]=>
+        bool(false)
       }
     }
   }
   [4]=>
   array(8) {
     ["text"]=>
-    string(16) "</body></html>"
+    string(34) "<div>
+    Hello perkenalkan saya:"
     ["start"]=>
-    int(1266)
+    int(668)
     ["end"]=>
-    int(1288)
+    int(677)
     ["length"]=>
-    int(22)
+    int(9)
+    ["flag"]=>
+    string(1) "!"
+    ["inverse"]=>
+    bool(false)
+    ["key"]=>
+    string(6) "Author"
+    ["param"]=>
+    bool(false)
+  }
+  [5]=>
+  array(8) {
+    ["text"]=>
+    string(15) "<br>
+    saya:"
+    ["start"]=>
+    int(693)
+    ["end"]=>
+    int(702)
+    ["length"]=>
+    int(9)
+    ["flag"]=>
+    string(1) "!"
+    ["inverse"]=>
+    bool(false)
+    ["key"]=>
+    string(6) "Author"
+    ["param"]=>
+    bool(false)
+  }
+  [6]=>
+  array(8) {
+    ["text"]=>
+    string(21) "<br>
+    Hello saya:"
+    ["start"]=>
+    int(724)
+    ["end"]=>
+    int(733)
+    ["length"]=>
+    int(9)
+    ["flag"]=>
+    string(1) "!"
+    ["inverse"]=>
+    bool(false)
+    ["key"]=>
+    string(6) "Author"
+    ["param"]=>
+    bool(false)
+  }
+  [7]=>
+  array(8) {
+    ["text"]=>
+    string(28) "<br>
+    Hello perkenalkan:"
+    ["start"]=>
+    int(762)
+    ["end"]=>
+    int(771)
+    ["length"]=>
+    int(9)
+    ["flag"]=>
+    string(1) "!"
+    ["inverse"]=>
+    bool(false)
+    ["key"]=>
+    string(6) "Author"
+    ["param"]=>
+    bool(false)
+  }
+  [8]=>
+  array(8) {
+    ["text"]=>
+    string(17) "<br>
+    hehehe:"
+    ["start"]=>
+    int(789)
+    ["end"]=>
+    int(798)
+    ["length"]=>
+    int(9)
+    ["flag"]=>
+    string(1) "!"
+    ["inverse"]=>
+    bool(false)
+    ["key"]=>
+    string(6) "Author"
+    ["param"]=>
+    bool(false)
+  }
+  [9]=>
+  array(8) {
+    ["text"]=>
+    string(21) "<br>
+    perkenalkan"
+    ["start"]=>
+    int(820)
+    ["end"]=>
+    int(829)
+    ["length"]=>
+    int(9)
+    ["flag"]=>
+    string(1) "!"
+    ["inverse"]=>
+    bool(false)
+    ["key"]=>
+    string(6) "Author"
+    ["param"]=>
+    bool(false)
+  }
+  [10]=>
+  array(9) {
+    ["text"]=>
+    string(27) "<br>
+
+    <h1>member</h1>"
+    ["start"]=>
+    int(862)
+    ["end"]=>
+    int(878)
+    ["length"]=>
+    int(16)
+    ["flag"]=>
+    string(1) "!"
+    ["inverse"]=>
+    bool(false)
+    ["key"]=>
+    string(6) "Member"
+    ["param"]=>
+    bool(false)
+    ["child"]=>
+    array(4) {
+      [0]=>
+      array(8) {
+        ["text"]=>
+        string(0) ""
+        ["start"]=>
+        int(888)
+        ["end"]=>
+        int(901)
+        ["length"]=>
+        int(13)
+        ["flag"]=>
+        string(1) "!"
+        ["inverse"]=>
+        bool(false)
+        ["key"]=>
+        string(10) "NamaMember"
+        ["param"]=>
+        bool(false)
+      }
+      [1]=>
+      array(8) {
+        ["text"]=>
+        string(5) "<br/>"
+        ["start"]=>
+        int(926)
+        ["end"]=>
+        int(935)
+        ["length"]=>
+        int(9)
+        ["flag"]=>
+        string(1) "!"
+        ["inverse"]=>
+        bool(false)
+        ["key"]=>
+        string(6) "Alamat"
+        ["param"]=>
+        bool(false)
+      }
+      [2]=>
+      array(9) {
+        ["text"]=>
+        string(34) "<br/>
+
+        Daftar Hobi: <br>"
+        ["start"]=>
+        int(991)
+        ["end"]=>
+        int(1005)
+        ["length"]=>
+        int(14)
+        ["flag"]=>
+        string(1) "!"
+        ["inverse"]=>
+        bool(false)
+        ["key"]=>
+        string(4) "Hobi"
+        ["param"]=>
+        bool(false)
+        ["child"]=>
+        array(2) {
+          [0]=>
+          array(8) {
+            ["text"]=>
+            string(13) "Daftar Hobi :"
+            ["start"]=>
+            int(1029)
+            ["end"]=>
+            int(1036)
+            ["length"]=>
+            int(7)
+            ["flag"]=>
+            string(1) "!"
+            ["inverse"]=>
+            bool(false)
+            ["key"]=>
+            string(4) "List"
+            ["param"]=>
+            bool(false)
+          }
+          [1]=>
+          array(8) {
+            ["text"]=>
+            string(4) "<br>"
+            ["start"]=>
+            int(1051)
+            ["end"]=>
+            int(1065)
+            ["length"]=>
+            int(14)
+            ["flag"]=>
+            string(1) "/"
+            ["inverse"]=>
+            bool(false)
+            ["key"]=>
+            string(4) "Hobi"
+            ["param"]=>
+            bool(false)
+          }
+        }
+      }
+      [3]=>
+      array(8) {
+        ["text"]=>
+        string(5) "<br/>"
+        ["start"]=>
+        int(1086)
+        ["end"]=>
+        int(1102)
+        ["length"]=>
+        int(16)
+        ["flag"]=>
+        string(1) "/"
+        ["inverse"]=>
+        bool(false)
+        ["key"]=>
+        string(6) "Member"
+        ["param"]=>
+        bool(false)
+      }
+    }
+  }
+  [11]=>
+  array(8) {
+    ["text"]=>
+    string(27) "</div>
+
+NAMA MEMBER LUAR:"
+    ["start"]=>
+    int(1132)
+    ["end"]=>
+    int(1145)
+    ["length"]=>
+    int(13)
+    ["flag"]=>
+    string(1) "!"
+    ["inverse"]=>
+    bool(false)
+    ["key"]=>
+    string(10) "NamaMember"
+    ["param"]=>
+    bool(false)
+  }
+  [12]=>
+  array(8) {
+    ["text"]=>
+    string(14) "<br>
+
+band1:"
+    ["start"]=>
+    int(1162)
+    ["end"]=>
+    int(1174)
+    ["length"]=>
+    int(12)
+    ["flag"]=>
+    string(1) "!"
+    ["inverse"]=>
+    bool(false)
+    ["key"]=>
+    string(9) "navilera1"
+    ["param"]=>
+    bool(false)
+  }
+  [13]=>
+  array(8) {
+    ["text"]=>
+    string(0) ""
+    ["start"]=>
+    int(1178)
+    ["end"]=>
+    int(1199)
+    ["length"]=>
+    int(21)
+    ["flag"]=>
+    string(1) "!"
+    ["inverse"]=>
+    bool(false)
+    ["key"]=>
+    string(4) "view"
+    ["param"]=>
+    string(12) "sidebar.html"
+  }
+  [14]=>
+  array(8) {
+    ["text"]=>
+    string(38) "<p>END OF FILE</p>
+
+</body>
+</html>"
+    ["start"]=>
+    int(1199)
+    ["end"]=>
+    int(1245)
+    ["length"]=>
+    int(46)
     ["flag"]=>
     bool(false)
     ["inverse"]=>

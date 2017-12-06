@@ -9,7 +9,7 @@ use pte\slicer\Slicer;
  * Class Pte
  * @package pte
  */
-class Pte
+class Pte implements CustomRender
 {
 
     const VERSION = '0.1.0';
@@ -29,6 +29,15 @@ class Pte
 
     var $MASTER = true;
     var $HTML = true;
+
+    var $ElapsedTime = 0;
+
+    /**
+     * @var CustomRender
+     */
+    var $CustomRender;
+
+    var $Cache = true;
 
     /**
      * @var string
@@ -50,6 +59,23 @@ class Pte
      */
     public $_Value = array();
 
+    var $fn;
+    var $param;
+
+    var $tempJs = '';
+    var $tempCss = '';
+
+    /**
+     * Pte constructor.
+     * @param bool $cache
+     */
+    public function __construct($cache = true)
+    {
+        $this->ElapsedTime = microtime(true);
+        $this->Cache = $cache;
+    }
+
+
     public function SetHtml($Html = null)
     {
         $this->_HtmlData = $Html;
@@ -60,8 +86,9 @@ class Pte
         $this->_MasterData = $Master;
     }
 
-    public function SetValue($Value = array())
+    public function SetValue(CustomRender $CustomRender, $Value = array())
     {
+        $this->CustomRender = $CustomRender;
         $this->_Value = $Value;
     }
 
@@ -75,8 +102,18 @@ class Pte
             $template->AddFruitSegments($val);
         }
 
-        $slicer = new Slicer();
-        $Content = $slicer->Lexer($template->GetFruitPack());
+        if ($this->Cache) {
+            if (!file_exists($template->GetName())) {
+                $slicer = new Slicer();
+                $Content = $slicer->Lexer($template->GetFruitPack());
+                file_put_contents($template->GetName(), json_encode($Content));
+            } else {
+                $Content = json_decode(file_get_contents($template->GetName()), true);
+            }
+        } else {
+            $slicer = new Slicer();
+            $Content = $slicer->Lexer($template->GetFruitPack());
+        }
 
         header('Author: Puko Framework');
 
@@ -91,9 +128,10 @@ class Pte
                 echo $this->RenderXml($this->_Value);
                 break;
             case Pte::VIEW_NULL:
-                exit();
                 break;
         }
+
+        $this->ElapsedTime = (microtime(true) - $this->ElapsedTime);
     }
 
     /**
@@ -116,19 +154,29 @@ class Pte
 
             $this->_Output .= sprintf("%s ", $val['text']);
 
-            if ($this->GetVarType($datum) === $this->STRINGS) {
-                $this->_Output .= (string)$Data[$val['key']];
-            } else if ($this->GetVarType($datum) === $this->NUMERIC) {
-                $this->_Output .= (double)$Data[$val['key']];
-            } else if ($this->GetVarType($datum) === $this->ARRAYS) {
-                foreach ($datum as $k => $v) {
-                    $this->RenderHtml($val['child'], $v);
-                }
+            $this->CustomRender->Register($val['key'], $val['param']);
+            $this->_Output .= $this->CustomRender->Parse();
+
+            if ($val['param'] !== false) {
+                $this->Register($val['key'], $val['param']);
+                $this->_Output .= $this->Parse();
             } else {
-                if ($hasChild && $datum !== null) {
-                    $this->RenderHtml($val['child'], $datum);
+                if ($this->GetVarType($datum) === $this->STRINGS) {
+                    $this->_Output .= (string)$Data[$val['key']];
+                } else if ($this->GetVarType($datum) === $this->NUMERIC) {
+                    $this->_Output .= (double)$Data[$val['key']];
+                } else if ($this->GetVarType($datum) === $this->ARRAYS) {
+                    foreach ($datum as $k => $v) {
+                        $this->RenderHtml($val['child'], $v);
+                    }
+                } else {
+                    if ($hasChild && $datum !== null) {
+                        $this->RenderHtml($val['child'], $datum);
+                    }
                 }
             }
+
+
         }
         return $this->_Output;
     }
@@ -174,5 +222,48 @@ class Pte
         } else {
             return $this->UNDEFINED;
         }
+    }
+
+    /**
+     * @return double
+     * Time in seconds
+     */
+    public function getElapsedTime()
+    {
+        return $this->ElapsedTime;
+    }
+
+    /**
+     * @param $fnName
+     * @param $paramArray
+     */
+    public function Register($fnName, $paramArray)
+    {
+        $this->fn = $fnName;
+        $this->param = $paramArray;
+    }
+
+    /**
+     * @return string
+     */
+    public function Parse()
+    {
+        if ($this->fn === 'part') {
+            if ($this->param === 'css') {
+                return $this->tempCss;
+            }
+            if ($this->param === 'js') {
+                return $this->tempJs;
+            }
+        }
+
+        if ($this->fn === 'css') {
+            $this->tempCss .= $this->param;
+        }
+        if ($this->fn === 'js') {
+            $this->tempJs .= $this->param;
+        }
+
+        return '';
     }
 }

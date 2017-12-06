@@ -110,6 +110,7 @@ class Fruits implements IFruits
         }
         $this->Location = $bodyLocation;
         $extension = explode('.', $bodyLocation);
+        $this->Name = $extension[0];
         $this->Extension = $extension[sizeof($extension) - 1];
         $this->Body = $Body;
         return true;

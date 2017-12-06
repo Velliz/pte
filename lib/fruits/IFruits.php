@@ -8,7 +8,7 @@ namespace pte\fruits;
 interface IFruits
 {
 
-    const CONTENT_IDENTIFIER = '({{CONTENT}})';
+    const CONTENT_IDENTIFIER = '({CONTENT})';
 
     public function GetFruitPack();
 

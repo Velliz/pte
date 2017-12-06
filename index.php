@@ -4,11 +4,41 @@ use pte\Pte;
 
 include 'vendor/autoload.php';
 
-$pte = new Pte();
+class Assets implements \pte\CustomRender
+{
+
+    var $fn;
+    var $param;
+
+    var $tempJs = '';
+    var $tempCss = '';
+
+    public function Parse()
+    {
+        if ($this->fn === 'url') {
+            return 'http://localhost/pte' . $this->param;
+        }
+        return '';
+    }
+
+    /**
+     * @param $fnName
+     * @param $paramArray
+     */
+    public function Register($fnName, $paramArray)
+    {
+        $this->fn = $fnName;
+        $this->param = $paramArray;
+    }
+}
+
+$pte = new Pte(true);
 $pte->SetMaster('template/master.html');
 $pte->SetHtml('template/view.html');
 
-$pte->SetValue(array(
+$v = new Assets();
+
+$pte->SetValue($v, array(
     'FirstCircle' => 'Selamat Datang !',
     'WishList' => array(
         array(
@@ -47,7 +77,7 @@ $pte->SetValue(array(
     'Wishlist2' => array(
         'val' => 'DARI CONTROLLER',
     ),
-    'navilera1' => 'GFriend Band',
+    'namaband' => 'GFriend Band',
     'Umur' => 23,
     'Author' => 'Didit Velliz',
     'Member' => array(
@@ -65,3 +95,6 @@ $pte->SetValue(array(
 ));
 
 $pte->Output();
+
+echo $pte->getElapsedTime();
+

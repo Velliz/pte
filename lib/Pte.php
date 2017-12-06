@@ -12,8 +12,6 @@ use pte\slicer\Slicer;
 class Pte implements CustomRender
 {
 
-    const VERSION = '0.1.0';
-
     protected $ARRAYS = 0;
     protected $STRINGS = 1;
     protected $BOOLEANS = 2;

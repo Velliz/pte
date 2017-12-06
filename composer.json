@@ -3,20 +3,14 @@
     "description": "puko template engine",
     "type": "library",
     "license": "MIT",
+    "version": "0.1.0",
     "authors": [
         {
             "name": "didit velliz",
             "email": "diditvelliz@gmail.com"
         }
     ],
-    "minimum-stability": "dev",
-    "require": {},
     "autoload": {
-        "psr-4" : {
-            "pte\\": "lib/"
-        }
-    },
-    "autoload-dev": {
         "psr-4" : {
             "pte\\": "lib/"
         }

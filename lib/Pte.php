@@ -25,9 +25,6 @@ class Pte implements CustomRender
     const VIEW_XML = 3;
     const VIEW_NULL = 4;
 
-    var $MASTER = true;
-    var $HTML = true;
-
     var $ElapsedTime = 0;
 
     /**

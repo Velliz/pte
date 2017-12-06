@@ -4,7 +4,7 @@ use pte\Pte;
 
 include 'vendor/autoload.php';
 
-class Assets implements \pte\CustomRender
+class BaseUrl implements \pte\CustomRender
 {
 
     var $fn;
@@ -36,7 +36,7 @@ $pte = new Pte(true);
 $pte->SetMaster('template/master.html');
 $pte->SetHtml('template/view.html');
 
-$v = new Assets();
+$v = new BaseUrl();
 
 $pte->SetValue($v, array(
     'FirstCircle' => 'Selamat Datang !',
@@ -94,7 +94,7 @@ $pte->SetValue($v, array(
     'NamaMember' => 'Asus A451LB LUAR',
 ));
 
-$pte->Output();
-
-echo $pte->getElapsedTime();
+$pte->Output(Pte::VIEW_HTML, array(
+    'template/sidebar.html'
+));
 

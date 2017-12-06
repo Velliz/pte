@@ -1,52 +1,43 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <base href="{!url()}">
+    <base href="{!url(/)}">
     <title>Page {!FirstCircle}</title>
-    {!part(css)}
 </head>
 <body>
-<h1>Welcome to site {!Pass}</h1>
-<p>Today will be preparation {!url(/test/sumber)}</p>
+<div class="container">
+    <h1>Welcome to site {!Pass}</h1>
+    <p>Today will be preparation {!url(/test/sumber)}</p>
+    Wish List 1
+    <hr>
+    <!--{!WishList}-->
+        <p>Mulai terjemahan - {!Lingkaran}</p>
+        <!--{!Anak}-->
+            <div>Ini anak 1 umur - {!Umur}</div>
+            <!--{!Anak2}-->
+                <div>Ini anak 2 umur - {!Umur2}</div>
+            <!--{/Anak2}-->
+            <div>Ini ulangi anak 1 umur - {!Umur}</div>
+        <!--{/Anak}-->
+        <h1>Sekilan</h1>
+    <!--{/WishList}-->
+    <hr>
+    <!--{!Wishlist2}-->
+    <p>Aku Testing dulu Whistlist 2 {!val}</p>
+    <!--{/Wishlist2}-->
 
-Wish List 1
+    {CONTENT}
 
-<hr>
-<!--{!WishList}-->
-    <p>Mulai terjemahan - {!Lingkaran}</p>
-    <!--{!Anak}-->
-        <div>Ini anak 1 umur - {!Umur}</div>
-
-        <!--{!Anak2}-->
-            <div>Ini anak 2 umur - {!Umur2}</div>
-        <!--{/Anak2}-->
-
-        <div>Ini ulangi anak 1 umur - {!Umur}</div>
-
-    <!--{/Anak}-->
-    <h1>Sekilan</h1>
-
-<!--{/Wishlist}-->
-<hr>
-<!--{!Wishlist2}-->
-<p>Aku Testing dulu Whistlist 2 {!val}</p>
-<!--{/Wishlist2}-->
-
-{CONTENT}
-
-band1: {!namaband}
+    band1: {!namaband}
+    <!--{!Wishlist2}-->
+    <p>Aku Testing dulu Whistlist 2 {!val}</p>
+    <!--{/Wishlist2}-->
+</div>
 
 {!view(sidebar.html)}
 
-<p>END OF FILE</p>
-
-<!--{!Wishlist2}-->
-<p>Aku Testing dulu Whistlist 2 {!val}</p>
-<!--{/Wishlist2}-->
-
-Function view
-
+{!part(css)}
 {!part(js)}
+
 </body>
 </html>
-

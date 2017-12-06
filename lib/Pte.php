@@ -98,7 +98,7 @@ class Pte implements CustomRender
         $template->SetFruitMaster($this->_MasterData);
         $template->SetFruitBody($this->_HtmlData);
 
-        foreach ($Segments as $key => $val) {
+        foreach ($Segments as $val) {
             $template->AddFruitSegments($val);
         }
 

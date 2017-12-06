@@ -155,7 +155,7 @@ class Fruits implements IFruits
             $this->Template = preg_replace(IFruits::CONTENT_IDENTIFIER, $this->Body, $this->Master);
         }
         foreach ($this->Segments as $Item) {
-            $keywords = sprintf("({{%s}})", $Item['Name']);
+            $keywords = sprintf("({%s})", $Item['Name']);
             $this->Template = preg_replace($keywords, $Item['Data'], $this->Template);
         }
         return $this->Template;

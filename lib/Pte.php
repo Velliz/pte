@@ -114,47 +114,22 @@ class Pte
             $datum = isset($Data[$val['key']]) ? $Data[$val['key']] : null;
             $hasChild = isset($val['child']) ? true : false;
 
-            $this->_Output .= $val['text'] . "\n";
+            $this->_Output .= sprintf("%s ", $val['text']);
 
-            if ($val['flag'] === '/') {
-                break;
+            if ($this->GetVarType($datum) === $this->STRINGS) {
+                $this->_Output .= (string)$Data[$val['key']];
+            } else if ($this->GetVarType($datum) === $this->NUMERIC) {
+                $this->_Output .= (double)$Data[$val['key']];
+            } else if ($this->GetVarType($datum) === $this->ARRAYS) {
+                foreach ($datum as $k => $v) {
+                    $this->RenderHtml($val['child'], $v);
+                }
+            } else {
+                if ($hasChild && $datum !== null) {
+                    $this->RenderHtml($val['child'], $datum);
+                }
             }
-
-            switch ($this->GetVarType($datum)) {
-                case $this->ARRAYS:
-                    foreach ($datum as $k => $v) {
-                        $this->RenderHtml($val['child'], $v);
-                    }
-                    break;
-                case $this->NUMERIC:
-                    $this->_Output .= (double) $Data[$val['key']];
-                    break;
-                case $this->STRINGS:
-                    $this->_Output .= (string) $Data[$val['key']];
-                    break;
-                case $this->BOOLEANS:
-                    //todo: handle bool
-                    break;
-                case $this->OBJECTS:
-                    //todo: handle objects
-                    break;
-                case $this->NULLS:
-                    //todo: handle nulls
-                    break;
-                case $this->UNDEFINED:
-                    //todo: handle undefined
-                    break;
-                default:
-                    //todo: handle unknown/class data type
-                    break;
-            }
-            if ($hasChild) {
-                $this->RenderHtml($val['child'], $datum);
-            }
-
-            $Content[$key] = $val;
         }
-
         return $this->_Output;
     }
 

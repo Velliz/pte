@@ -76,7 +76,7 @@ class Fruits implements IFruits
      * @param $UseMaster
      * @param $UseBody
      */
-    public function __construct($UseMaster = true, $UseBody = true)
+    public function __construct($UseMaster = false, $UseBody = true)
     {
         $this->UseMaster = $UseMaster;
         $this->UseBody = $UseBody;

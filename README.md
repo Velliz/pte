@@ -1,20 +1,86 @@
 # PTE - Puko Templating Engine
 
-PTE is a standalone templating engine build for performance and compatible for standalone use. PTE in action traverses a DOM tree into a PHP array (lexer) and then combining output with data specs (parser).
+PTE is a standalone templating engine build for performance and compatible for standalone use. 
+PTE in action traverses a HTML DOM tree into a PHP array (lexer) and then combining output with data specs (parser).
 
-try it with composer command
+### Infograph
+
+Seconds average to render the html page with provided example in **index.php**
+
+* 0.004 s with caching off.
+* 0.002 s with caching on.
+
+### Installation
+
+Try it with composer command:
 
 ```
 composer require velliz/pte
 ```
 
-then instance the object
+Or you can download it directly, run composer install after it. 
+
+### Usage sample
+
+Instance the object:
 
 ```php
-$pte = new Pte(true);
+$pte = new Pte(false, true, true);
+```
+
+First param true for cache the template file. Second param true for using master file.
+Last param true for using html body file.
+
+Html file splitted into two piece.
+The first one is called master for base html template (you can see in **master.html** bellow) 
+and the other called html template (you can see in **view.html** bellow)
+
+```php
 $pte->SetMaster('template/master.html');
 $pte->SetHtml('template/view.html');
+```
 
+You also can create your own parsing rules with custom class like this:
+
+```php
+class BaseUrl implements \pte\CustomRender
+{
+
+    var $fn;
+    var $param;
+
+    var $tempJs = '';
+    var $tempCss = '';
+
+    public function Parse()
+    {
+        if ($this->fn === 'url') {
+            return 'http://localhost/' . $this->param;
+        }
+        return '';
+    }
+
+    /**
+     * @param $fnName
+     * @param $paramArray
+     */
+    public function Register($fnName, $paramArray)
+    {
+        $this->fn = $fnName;
+        $this->param = $paramArray;
+    }
+}
+```
+
+And using it to render tags in Html DOM like this:
+
+```php
+{!url(home)}
+```
+
+You can set the data value like this:
+
+```php
 $v = new BaseUrl();
 
 $pte->SetValue($v, array(
@@ -56,61 +122,36 @@ $pte->SetValue($v, array(
     'Wishlist2' => array(
         'val' => 'DARI CONTROLLER',
     ),
-    'namaband' => 'GFriend Band',
+    'namaband' => 'K-POP',
     'Umur' => 23,
     'Author' => 'Didit Velliz',
     'Member' => array(
         array(
-            'NamaMember' => 'Asus A451LB',
-            'Alamat' => 'JL Sukamekar 2 no 14',
+            'NamaMember' => 'Universitas X',
+            'Alamat' => 'Bandung, Indonesia',
             'Hobi' => array(
-                array('List' => 'Berenang'),
-                array('List' => 'Nyuci'),
-                array('List' => 'Masak'),
+                array('List' => 'Makan'),
+                array('List' => 'Traveling'),
+                array('List' => 'Tidur'),
             ),
         )
     ),
-    'NamaMember' => 'Asus A451LB LUAR',
-));
-
-$pte->Output(Pte::VIEW_HTML, array(
-    'template/sidebar.html'
+    'NamaMember' => 'Laptop Gaming',
 ));
 ```
 
-BaseUrl()
+You will notice that **SetValue** method requires 2 input param, first the custom renderer class, 
+and second is the data in array.
 
+Then you can get the result via **Output** method like this:
+ 
 ```php
-<?php
-
-class BaseUrl implements \pte\CustomRender
-{
-
-    var $fn;
-    var $param;
-
-    var $tempJs = '';
-    var $tempCss = '';
-
-    public function Parse()
-    {
-        if ($this->fn === 'url') {
-            return 'http://localhost/pte' . $this->param;
-        }
-        return '';
-    }
-
-    /**
-     * @param $fnName
-     * @param $paramArray
-     */
-    public function Register($fnName, $paramArray)
-    {
-        $this->fn = $fnName;
-        $this->param = $paramArray;
-    }
-}
+$pte->Output(Pte::VIEW_HTML);
 ```
+
+The output method is the part when the lexer and parser process the Html input.
+You also have a choice for choosing *Pte::VIEW_JSON* for output.
+Happy coding :)
 
 master.html
 

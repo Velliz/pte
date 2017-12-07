@@ -32,7 +32,7 @@ class BaseUrl implements \pte\CustomRender
     }
 }
 
-$pte = new Pte(true);
+$pte = new Pte(true, true, true);
 $pte->SetMaster('template/master.html');
 $pte->SetHtml('template/view.html');
 
@@ -97,4 +97,6 @@ $pte->SetValue($v, array(
 $pte->Output(Pte::VIEW_HTML, array(
     'template/sidebar.html'
 ));
+
+echo $pte->getElapsedTime();
 

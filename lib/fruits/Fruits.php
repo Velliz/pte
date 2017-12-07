@@ -19,13 +19,14 @@ class Fruits implements IFruits
 
     /**
      * @var string
+     * Overall template after combined
      */
     public $Template = "";
 
     /**
      * @var string
      */
-    private $Master = "";
+    private $Master = "{CONTENT}";
 
     /**
      * @var string
@@ -169,6 +170,24 @@ class Fruits implements IFruits
         }
         return $this->Template;
     }
+
+    /**
+     * @return bool
+     */
+    public function isUseMaster()
+    {
+        return $this->UseMaster;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isUseBody()
+    {
+        return $this->UseBody;
+    }
+
+
 
     /**
      * @return string

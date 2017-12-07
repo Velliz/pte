@@ -32,17 +32,17 @@ class Pte implements CustomRender
      */
     var $CustomRender;
 
-    var $Cache = true;
+    var $Cache = false;
 
     /**
      * @var string
      */
-    public $_HtmlData;
+    public $_HtmlData = '';
 
     /**
      * @var string
      */
-    public $_MasterData;
+    public $_MasterData = '{CONTENT}';
 
     /**
      * @var string
@@ -60,23 +60,29 @@ class Pte implements CustomRender
     var $tempJs = '';
     var $tempCss = '';
 
+    private $fruits;
+
     /**
      * Pte constructor.
      * @param bool $cache
+     * @param bool $UseMaster
+     * @param bool $UseBody
      */
-    public function __construct($cache = true)
+    public function __construct($cache = false, $UseMaster = false, $UseBody = true)
     {
         $this->ElapsedTime = microtime(true);
         $this->Cache = $cache;
+
+        $this->fruits = new Fruits($UseMaster, $UseBody);
     }
 
 
-    public function SetHtml($Html = null)
+    public function SetHtml($Html = '')
     {
         $this->_HtmlData = $Html;
     }
 
-    public function SetMaster($Master = null)
+    public function SetMaster($Master = '{CONTENT}')
     {
         $this->_MasterData = $Master;
     }
@@ -89,25 +95,29 @@ class Pte implements CustomRender
 
     public function Output($Type = Pte::VIEW_HTML, $Segments = array())
     {
-        $template = new Fruits();
-        $template->SetFruitMaster($this->_MasterData);
-        $template->SetFruitBody($this->_HtmlData);
+
+        if ($this->fruits->isUseMaster()) {
+            $this->fruits->SetFruitMaster($this->_MasterData);
+        }
+        if ($this->fruits->isUseBody()) {
+            $this->fruits->SetFruitBody($this->_HtmlData);
+        }
 
         foreach ($Segments as $val) {
-            $template->AddFruitSegments($val);
+            $this->fruits->AddFruitSegments($val);
         }
 
         if ($this->Cache) {
-            if (!file_exists($template->GetName())) {
+            if (!file_exists($this->fruits->GetName())) {
                 $slicer = new Slicer();
-                $Content = $slicer->Lexer($template->GetFruitPack());
-                file_put_contents($template->GetName(), json_encode($Content));
+                $Content = $slicer->Lexer($this->fruits->GetFruitPack());
+                file_put_contents($this->fruits->GetName(), json_encode($Content));
             } else {
-                $Content = json_decode(file_get_contents($template->GetName()), true);
+                $Content = json_decode(file_get_contents($this->fruits->GetName()), true);
             }
         } else {
             $slicer = new Slicer();
-            $Content = $slicer->Lexer($template->GetFruitPack());
+            $Content = $slicer->Lexer($this->fruits->GetFruitPack());
         }
 
         header('Author: Puko Framework');

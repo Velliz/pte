@@ -78,7 +78,7 @@ $pte->Output(Pte::VIEW_HTML, array(
 ));
 ```
 
-BaseUrl class looks like this:
+BaseUrl()
 
 ```php
 <?php
@@ -112,7 +112,7 @@ class BaseUrl implements \pte\CustomRender
 }
 ```
 
-master.html looks like this:
+master.html
 
 ```html
 <!DOCTYPE html>

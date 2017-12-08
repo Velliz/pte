@@ -6,13 +6,13 @@ use pte\exception\PteException;
 
 /**
  * Class Fruits
- * Fruit is class for convert the template into fruit representations.
+ * @package pte\fruits
+ *
+ * Copyright (c) 2017 - Present
  *
  * @author Didit Velliz
- * @mail diditvelliz@gmail.com
- * @lisence MIT
- * @package pte
- * @copyright 2017
+ * @link https://github.com/velliz/pte
+ * @since Version 0.1.0
  */
 class Fruits implements IFruits
 {

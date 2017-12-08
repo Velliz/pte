@@ -7,6 +7,12 @@ use Exception;
 /**
  * Class PteException
  * @package pte\exception
+ *
+ * Copyright (c) 2017 - Present
+ *
+ * @author Didit Velliz
+ * @link https://github.com/velliz/pte
+ * @since Version 0.1.0
  */
 class PteException extends Exception
 {
@@ -14,6 +20,7 @@ class PteException extends Exception
     const NOT_FOUND = 10401;
     const READ_ONLY = 10402;
     const REMOTE_ERROR = 10403;
+    const OUTPUT_ERROR = 10404;
 
     /**
      * @var string
@@ -43,6 +50,9 @@ class PteException extends Exception
                 break;
             case PteException::REMOTE_ERROR:
                 $this->Message = sprintf("Connection failed (%s)", PteException::REMOTE_ERROR);
+                break;
+            case PteException::OUTPUT_ERROR:
+                $this->Message = sprintf("Output error (%s)", PteException::OUTPUT_ERROR);
                 break;
             default:
                 $this->Message = "Error (UNKNOWN)";

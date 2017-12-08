@@ -1,18 +1,27 @@
 <?php
 
-namespace pte\elements;
+namespace pte;
 
-use pte\CustomRender;
-
-abstract class Elements implements CustomRender
+/**
+ * Class Parts
+ * @package pte
+ *
+ * Copyright (c) 2017 - Present
+ *
+ * @author Didit Velliz
+ * @link https://github.com/velliz/pte
+ * @since Version 0.1.1
+ */
+abstract class Parts implements CustomRender
 {
 
-    protected $tags;
+    var $tags;
+    var $fnName;
+
     protected $assets;
     protected $data;
-
-    protected $fnName;
     protected $paramArray;
+    protected $pte;
 
     /**
      * Elements constructor.
@@ -21,6 +30,7 @@ abstract class Elements implements CustomRender
      */
     public function __construct($tags, $data)
     {
+        $this->pte = new Pte(true, false, true);
         $this->tags = $tags;
         $this->data = $data;
     }
@@ -42,4 +52,5 @@ abstract class Elements implements CustomRender
     {
         $this->assets = $assets;
     }
+
 }

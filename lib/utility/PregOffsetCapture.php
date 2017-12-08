@@ -7,13 +7,16 @@ use pte\slicer\ISlicer;
 /**
  * Class PregOffsetCapture
  * @package pte\utility
+ *
+ * Copyright (c) 2017 - Present
+ *
+ * @author Didit Velliz
+ * @link https://github.com/velliz/pte
+ * @since Version 0.1.0
  */
 class PregOffsetCapture
 {
 
-    /**
-     * @var array
-     */
     private $RawPregData;
 
     public function __construct($RawPregData)

@@ -2,7 +2,7 @@
 
 namespace pte;
 
-use pte\elements\Elements;
+use pte\exception\PteException;
 use pte\fruits\Fruits;
 use pte\slicer\Slicer;
 
@@ -10,38 +10,36 @@ use pte\slicer\Slicer;
  * Class Pte
  * @package pte
  *
- * puko templating engine.
- * Copyright (c) 2017, Didit Velliz
+ * Copyright (c) 2017 - Present
  *
  * @author Didit Velliz
- * @link https://github.com/velliz/pukoframework
+ * @link https://github.com/velliz/pte
  * @since Version 0.1.0
  */
 class Pte
 {
 
-    protected $ARRAYS = 0;
-    protected $STRINGS = 1;
-    protected $BOOLEANS = 2;
-    protected $NULLS = 4;
-    protected $NUMERIC = 5;
-    protected $OBJECTS = 6;
-    protected $UNDEFINED = 7;
+    #region data types
+    private $ARRAYS = 0;
+    private $STRINGS = 1;
+    private $BOOLEANS = 2;
+    private $NULLS = 4;
+    private $NUMERIC = 5;
+    private $OBJECTS = 6;
+    private $UNDEFINED = 7;
+    #end region data types
 
+    #region view types
     const VIEW_HTML = 1;
     const VIEW_JSON = 2;
     const VIEW_XML = 3;
     const VIEW_NULL = 4;
+    #end region data types
 
     /**
-     * @var Elements
+     * @var float
      */
-    private $Element;
-
-    /**
-     * @var int|mixed
-     */
-    private $ElapsedTime = 0;
+    private $ElapsedTime = 0.0;
 
     /**
      * @var CustomRender
@@ -90,6 +88,7 @@ class Pte
 
     /**
      * Pte constructor.
+     *
      * @param bool $cache
      * @param bool $UseMaster
      * @param bool $UseBody
@@ -130,6 +129,8 @@ class Pte
      * @param CustomRender $CustomRender
      * @param int $Type
      * @param array $Segments
+     * @return string
+     * @throws PteException
      */
     public function Output($CustomRender, $Type = Pte::VIEW_HTML, $Segments = array())
     {
@@ -162,29 +163,35 @@ class Pte
 
         switch ($Type) {
             case Pte::VIEW_HTML:
-                echo $this->RenderHtml($Content, $this->_Value);
+                $output = $this->RenderHtml($Content, $this->_Value);
                 break;
             case Pte::VIEW_JSON:
-                echo $this->RenderJson($this->_Value);
+                $output = $this->RenderJson($this->_Value);
                 break;
             case Pte::VIEW_XML:
-                echo $this->RenderXml($this->_Value);
+                $output = $this->RenderXml($this->_Value);
                 break;
             case Pte::VIEW_NULL:
+                $output = null;
+                break;
+            default:
+                throw new PteException(PteException::OUTPUT_ERROR);
                 break;
         }
 
         $this->ElapsedTime = (microtime(true) - $this->ElapsedTime);
 
+        return $output;
     }
 
     /**
      * @param $Content
      * @param $Data
      * @return string content is template in array format
+     * @throws PteException
      *
-     * content is template in array format
-     * data is returned date from controller
+     * Content is template in array format
+     * Data is returned date from controller
      */
     public function RenderHtml(&$Content, &$Data)
     {
@@ -233,16 +240,19 @@ class Pte
                     $this->RenderHtml($val['child'], $datum);
                 }
             } else if ($this->GetVarType($datum) === $this->OBJECTS) {
-                if ($datum instanceof Elements) {
+                if ($datum instanceof Parts) {
                     $datum->RegisterFunction($val['key'], $val['param']);
-                    $this->_Output .= $datum->Parse();
+                    if ($datum->tags === $datum->fnName) {
+                        $this->_Output .= $datum->Parse();
+                    }
+                } else {
+                    throw new PteException(PteException::OUTPUT_ERROR);
                 }
             } else {
                 if ($hasChild && $datum !== null) {
                     $this->RenderHtml($val['child'], $datum);
                 }
             }
-
         }
         return $this->_Output;
     }

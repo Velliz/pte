@@ -4,6 +4,12 @@ namespace pte\slicer;
 /**
  * Interface ISlicer
  * @package pte
+ *
+ * Copyright (c) 2017 - Present
+ *
+ * @author Didit Velliz
+ * @link https://github.com/velliz/pte
+ * @since Version 0.1.0
  */
 interface ISlicer
 {

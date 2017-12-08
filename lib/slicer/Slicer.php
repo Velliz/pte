@@ -8,7 +8,13 @@ use pte\utility\PregOffsetCapture;
  * Class Slicer
  * @package pte
  *
- * slicing a fruits into piece of fruit segments
+ * Slicing a fruits into piece of fruit segments
+ *
+ * Copyright (c) 2017 - Present
+ *
+ * @author Didit Velliz
+ * @link https://github.com/velliz/pte
+ * @since Version 0.1.0
  */
 class Slicer
 {
@@ -19,7 +25,7 @@ class Slicer
      * @param int $position
      * @return array
      *
-     * process the last of the converted html element
+     * Process the last of the converted html element
      */
     public function Lexer($template, $output = array(), $position = 0)
     {
@@ -47,7 +53,7 @@ class Slicer
      * @param $position
      * @return array
      *
-     * converting html file into AST in PHP array
+     * Converting html file into AST in PHP array
      */
     private function PregCapture(&$template, &$output, &$position)
     {
@@ -72,7 +78,9 @@ class Slicer
                 $output[] = $lex;
                 break;
             }
-            if ($capture->Capture(ISlicer::BEFORE) === ISlicer::A && $capture->Capture(ISlicer::AFTER) === ISlicer::H) {
+            $a = $capture->Capture(ISlicer::BEFORE) === ISlicer::A;
+            $b = $capture->Capture(ISlicer::AFTER) === ISlicer::H;
+            if ($a && $b) {
                 $this->PregCapture($template, $lex['child'], $position);
             } else {
                 unset($lex['child']);

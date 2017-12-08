@@ -1,51 +1,15 @@
 <?php
 
-use pte\CustomRender;
-use pte\Pte;
-
 include 'vendor/autoload.php';
 
-class BaseUrl implements CustomRender
-{
-
-    var $fn;
-    var $param;
-
-    var $tempJs = '';
-    var $tempCss = '';
-
-    public function Parse()
-    {
-        if ($this->fn === 'url') {
-            return 'http://localhost/pte' . $this->param;
-        }
-        return '';
-    }
-
-    /**
-     * @param $fnName
-     * @param $paramArray
-     */
-    public function RegisterFunction($fnName, $paramArray)
-    {
-        $this->fn = $fnName;
-        $this->param = $paramArray;
-    }
-
-    /**
-     * @param $assets
-     */
-    public function RegisterAssets($assets)
-    {
-        // TODO: Implement RegisterAssets() method.
-    }
-}
+use pte\elements\Tables;
+use pte\Pte;
 
 $pte = new Pte(false, true, true);
 $pte->SetMaster('template/master.html');
 $pte->SetHtml('template/view.html');
 
-$v = new BaseUrl();
+$v = new Tables('tables', array());
 
 $pte->SetValue(array(
     'FirstCircle' => 'Selamat Datang !',
@@ -93,10 +57,11 @@ $pte->SetValue(array(
         )
     ),
     'NamaMember' => 'Asus A451LB LUAR',
+    'tables' => new Tables('tables', array())
 ));
 
 $pte->Output(null, Pte::VIEW_HTML, array(
-    'template/sidebars.html'
+    'template/sidebar.html'
 ));
 
 echo $pte->getElapsedTime();

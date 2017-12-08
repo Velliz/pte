@@ -2,6 +2,7 @@
 
 namespace pte;
 
+use pte\elements\Elements;
 use pte\fruits\Fruits;
 use pte\slicer\Slicer;
 
@@ -31,6 +32,11 @@ class Pte
     const VIEW_JSON = 2;
     const VIEW_XML = 3;
     const VIEW_NULL = 4;
+
+    /**
+     * @var Elements
+     */
+    private $Element;
 
     /**
      * @var int|mixed
@@ -115,7 +121,7 @@ class Pte
     /**
      * @param array $Value
      */
-    public function SetValue( $Value = array())
+    public function SetValue($Value = array())
     {
         $this->_Value = $Value;
     }
@@ -226,6 +232,10 @@ class Pte
                     if ($datum) {
                         $this->RenderHtml($val['child'], $datum);
                     }
+                } else if ($this->GetVarType($datum) === $this->OBJECTS) {
+                    if ($datum instanceof Elements) {
+                        $this->_Output .= $datum->Parse();
+                    }
                 } else {
                     if ($hasChild && $datum !== null) {
                         $this->RenderHtml($val['child'], $datum);
@@ -262,6 +272,9 @@ class Pte
      */
     protected function GetVarType($var)
     {
+        if (is_object($var)) {
+            return $this->OBJECTS;
+        }
         if (is_array($var)) {
             return $this->ARRAYS;
         }
@@ -276,9 +289,8 @@ class Pte
         }
         if (is_numeric($var)) {
             return $this->NUMERIC;
-        } else {
-            return $this->UNDEFINED;
         }
+        return $this->UNDEFINED;
     }
 
     /**

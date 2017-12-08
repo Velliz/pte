@@ -6,11 +6,6 @@ interface CustomRender
 {
 
     /**
-     * @param $tags
-     */
-    public function SetTags($tags);
-
-    /**
      * @param $assets
      */
     public function RegisterAssets($assets);

@@ -158,8 +158,6 @@ class Pte
             $Content = $slicer->Lexer($this->fruits->GetFruitPack());
         }
 
-        header('Author: Puko Framework');
-
         $this->CustomRender = $CustomRender;
 
         switch ($Type) {
@@ -177,6 +175,7 @@ class Pte
         }
 
         $this->ElapsedTime = (microtime(true) - $this->ElapsedTime);
+
     }
 
     /**
@@ -219,29 +218,31 @@ class Pte
                         $this->_Output .= $this->tempJs;
                     }
                 }
+            }
+
+            if ($this->GetVarType($datum) === $this->STRINGS) {
+                $this->_Output .= (string)$Data[$val['key']];
+            } else if ($this->GetVarType($datum) === $this->NUMERIC) {
+                $this->_Output .= (double)$Data[$val['key']];
+            } else if ($this->GetVarType($datum) === $this->ARRAYS) {
+                foreach ($datum as $k => $v) {
+                    $this->RenderHtml($val['child'], $v);
+                }
+            } else if ($this->GetVarType($datum) === $this->BOOLEANS) {
+                if ($datum) {
+                    $this->RenderHtml($val['child'], $datum);
+                }
+            } else if ($this->GetVarType($datum) === $this->OBJECTS) {
+                if ($datum instanceof Elements) {
+                    $datum->RegisterFunction($val['key'], $val['param']);
+                    $this->_Output .= $datum->Parse();
+                }
             } else {
-                if ($this->GetVarType($datum) === $this->STRINGS) {
-                    $this->_Output .= (string)$Data[$val['key']];
-                } else if ($this->GetVarType($datum) === $this->NUMERIC) {
-                    $this->_Output .= (double)$Data[$val['key']];
-                } else if ($this->GetVarType($datum) === $this->ARRAYS) {
-                    foreach ($datum as $k => $v) {
-                        $this->RenderHtml($val['child'], $v);
-                    }
-                } else if ($this->GetVarType($datum) === $this->BOOLEANS) {
-                    if ($datum) {
-                        $this->RenderHtml($val['child'], $datum);
-                    }
-                } else if ($this->GetVarType($datum) === $this->OBJECTS) {
-                    if ($datum instanceof Elements) {
-                        $this->_Output .= $datum->Parse();
-                    }
-                } else {
-                    if ($hasChild && $datum !== null) {
-                        $this->RenderHtml($val['child'], $datum);
-                    }
+                if ($hasChild && $datum !== null) {
+                    $this->RenderHtml($val['child'], $datum);
                 }
             }
+
         }
         return $this->_Output;
     }
@@ -297,7 +298,7 @@ class Pte
      * @return double
      * Time in seconds
      */
-    public function getElapsedTime()
+    public function GetElapsedTime()
     {
         return $this->ElapsedTime;
     }

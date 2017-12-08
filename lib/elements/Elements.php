@@ -7,6 +7,13 @@ use pte\CustomRender;
 abstract class Elements implements CustomRender
 {
 
+    protected $tags;
+    protected $assets;
+    protected $data;
+
+    protected $fnName;
+    protected $paramArray;
+
     /**
      * Elements constructor.
      * @param $tags
@@ -14,14 +21,25 @@ abstract class Elements implements CustomRender
      */
     public function __construct($tags, $data)
     {
-
+        $this->tags = $tags;
+        $this->data = $data;
     }
 
     /**
-     * @return string
+     * @param $fnName
+     * @param $paramArray
      */
-    public function Parse()
+    public function RegisterFunction($fnName, $paramArray)
     {
-        return '<h1>TABLES</h1>';
+        $this->fnName = $fnName;
+        $this->paramArray = $paramArray;
+    }
+
+    /**
+     * @param $assets
+     */
+    public function RegisterAssets($assets)
+    {
+        $this->assets = $assets;
     }
 }

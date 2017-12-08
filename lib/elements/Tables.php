@@ -2,6 +2,10 @@
 
 namespace pte\elements;
 
+/**
+ * Class Tables
+ * @package pte\elements
+ */
 class Tables extends Elements
 {
 
@@ -16,26 +20,10 @@ class Tables extends Elements
     }
 
     /**
-     * @param $tags
+     * @return string
      */
-    public function SetTags($tags)
+    public function Parse()
     {
+        return $this->paramArray;
     }
-
-    /**
-     * @param $assets
-     */
-    public function RegisterAssets($assets)
-    {
-        // TODO: Implement RegisterAssets() method.
-    }
-
-    /**
-     * @param $fnName
-     * @param $paramArray
-     */
-    public function RegisterFunction($fnName, $paramArray)
-    {
-    }
-
 }

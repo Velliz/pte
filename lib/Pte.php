@@ -8,8 +8,15 @@ use pte\slicer\Slicer;
 /**
  * Class Pte
  * @package pte
+ *
+ * puko templating engine.
+ * Copyright (c) 2017, Didit Velliz
+ *
+ * @author Didit Velliz
+ * @link https://github.com/velliz/pukoframework
+ * @since Version 0.1.0
  */
-class Pte implements CustomRender
+class Pte
 {
 
     protected $ARRAYS = 0;
@@ -25,41 +32,54 @@ class Pte implements CustomRender
     const VIEW_XML = 3;
     const VIEW_NULL = 4;
 
-    var $ElapsedTime = 0;
+    /**
+     * @var int|mixed
+     */
+    private $ElapsedTime = 0;
 
     /**
      * @var CustomRender
      */
-    var $CustomRender;
+    private $CustomRender;
 
-    var $Cache = false;
+    /**
+     * @var bool
+     */
+    private $Cache = false;
 
     /**
      * @var string
      */
-    public $_HtmlData = '';
+    private $_HtmlData = '';
 
     /**
      * @var string
      */
-    public $_MasterData = '{CONTENT}';
+    private $_MasterData = '{CONTENT}';
 
     /**
      * @var string
      */
-    private $_Output = "";
+    private $_Output = '';
 
     /**
      * @var array
      */
-    public $_Value = array();
+    private $_Value = array();
 
-    var $fn;
-    var $param;
+    /**
+     * @var string
+     */
+    private $tempJs = '';
 
-    var $tempJs = '';
-    var $tempCss = '';
+    /**
+     * @var string
+     */
+    private $tempCss = '';
 
+    /**
+     * @var Fruits
+     */
     private $fruits;
 
     /**
@@ -76,24 +96,36 @@ class Pte implements CustomRender
         $this->fruits = new Fruits($UseMaster, $UseBody);
     }
 
-
+    /**
+     * @param string $Html
+     */
     public function SetHtml($Html = '')
     {
         $this->_HtmlData = $Html;
     }
 
+    /**
+     * @param string $Master
+     */
     public function SetMaster($Master = '{CONTENT}')
     {
         $this->_MasterData = $Master;
     }
 
-    public function SetValue(CustomRender $CustomRender, $Value = array())
+    /**
+     * @param array $Value
+     */
+    public function SetValue( $Value = array())
     {
-        $this->CustomRender = $CustomRender;
         $this->_Value = $Value;
     }
 
-    public function Output($Type = Pte::VIEW_HTML, $Segments = array())
+    /**
+     * @param CustomRender $CustomRender
+     * @param int $Type
+     * @param array $Segments
+     */
+    public function Output($CustomRender, $Type = Pte::VIEW_HTML, $Segments = array())
     {
 
         if ($this->fruits->isUseMaster()) {
@@ -122,6 +154,8 @@ class Pte implements CustomRender
 
         header('Author: Puko Framework');
 
+        $this->CustomRender = $CustomRender;
+
         switch ($Type) {
             case Pte::VIEW_HTML:
                 echo $this->RenderHtml($Content, $this->_Value);
@@ -142,7 +176,6 @@ class Pte implements CustomRender
     /**
      * @param $Content
      * @param $Data
-     *
      * @return string content is template in array format
      *
      * content is template in array format
@@ -159,12 +192,27 @@ class Pte implements CustomRender
 
             $this->_Output .= sprintf("%s ", $val['text']);
 
-            $this->CustomRender->Register($val['key'], $val['param']);
-            $this->_Output .= $this->CustomRender->Parse();
+            if ($this->CustomRender !== null) {
+                $this->CustomRender->RegisterFunction($val['key'], $val['param']);
+                $this->_Output .= $this->CustomRender->Parse();
+            }
 
             if ($val['param'] !== false) {
-                $this->Register($val['key'], $val['param']);
-                $this->_Output .= $this->Parse();
+                if ($val['key'] === 'css') {
+                    $this->tempCss .= $val['param'];
+                }
+                if ($val['key'] === 'js') {
+                    $this->tempJs .= $val['param'];
+                }
+
+                if ($val['key'] === 'part') {
+                    if ($val['param'] === 'css') {
+                        $this->_Output .= $this->tempCss;
+                    }
+                    if ($val['param'] === 'js') {
+                        $this->_Output .= $this->tempJs;
+                    }
+                }
             } else {
                 if ($this->GetVarType($datum) === $this->STRINGS) {
                     $this->_Output .= (string)$Data[$val['key']];
@@ -174,21 +222,22 @@ class Pte implements CustomRender
                     foreach ($datum as $k => $v) {
                         $this->RenderHtml($val['child'], $v);
                     }
+                } else if ($this->GetVarType($datum) === $this->BOOLEANS) {
+                    if ($datum) {
+                        $this->RenderHtml($val['child'], $datum);
+                    }
                 } else {
                     if ($hasChild && $datum !== null) {
                         $this->RenderHtml($val['child'], $datum);
                     }
                 }
             }
-
-
         }
         return $this->_Output;
     }
 
     /**
      * @param $Data
-     *
      * @return string
      */
     public function RenderJson(&$Data)
@@ -199,7 +248,6 @@ class Pte implements CustomRender
 
     /**
      * @param $Data
-     *
      * @return string
      */
     public function RenderXml(&$Data)
@@ -208,6 +256,10 @@ class Pte implements CustomRender
         return xmlrpc_encode($Data);
     }
 
+    /**
+     * @param $var
+     * @return int
+     */
     protected function GetVarType($var)
     {
         if (is_array($var)) {
@@ -238,37 +290,4 @@ class Pte implements CustomRender
         return $this->ElapsedTime;
     }
 
-    /**
-     * @param $fnName
-     * @param $paramArray
-     */
-    public function Register($fnName, $paramArray)
-    {
-        $this->fn = $fnName;
-        $this->param = $paramArray;
-    }
-
-    /**
-     * @return string
-     */
-    public function Parse()
-    {
-        if ($this->fn === 'part') {
-            if ($this->param === 'css') {
-                return $this->tempCss;
-            }
-            if ($this->param === 'js') {
-                return $this->tempJs;
-            }
-        }
-
-        if ($this->fn === 'css') {
-            $this->tempCss .= $this->param;
-        }
-        if ($this->fn === 'js') {
-            $this->tempJs .= $this->param;
-        }
-
-        return '';
-    }
 }

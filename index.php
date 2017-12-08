@@ -1,10 +1,11 @@
 <?php
 
+use pte\CustomRender;
 use pte\Pte;
 
 include 'vendor/autoload.php';
 
-class BaseUrl implements \pte\CustomRender
+class BaseUrl implements CustomRender
 {
 
     var $fn;
@@ -25,20 +26,28 @@ class BaseUrl implements \pte\CustomRender
      * @param $fnName
      * @param $paramArray
      */
-    public function Register($fnName, $paramArray)
+    public function RegisterFunction($fnName, $paramArray)
     {
         $this->fn = $fnName;
         $this->param = $paramArray;
     }
+
+    /**
+     * @param $assets
+     */
+    public function RegisterAssets($assets)
+    {
+        // TODO: Implement RegisterAssets() method.
+    }
 }
 
-$pte = new Pte(true, true, true);
+$pte = new Pte(false, true, true);
 $pte->SetMaster('template/master.html');
 $pte->SetHtml('template/view.html');
 
 $v = new BaseUrl();
 
-$pte->SetValue($v, array(
+$pte->SetValue(array(
     'FirstCircle' => 'Selamat Datang !',
     'WishList' => array(
         array(
@@ -50,14 +59,6 @@ $pte->SetValue($v, array(
                         array('Umur2' => 41),
                         array('Umur2' => 42),
                         array('Umur2' => 43),
-                    ),
-                ),
-                array(
-                    'Umur' => 19,
-                    'Anak2' => array(
-                        array('Umur2' => 14),
-                        array('Umur2' => 15),
-                        array('Umur2' => 16),
                     ),
                 )
             ),
@@ -94,8 +95,8 @@ $pte->SetValue($v, array(
     'NamaMember' => 'Asus A451LB LUAR',
 ));
 
-$pte->Output(Pte::VIEW_HTML, array(
-    'template/sidebar.html'
+$pte->Output(null, Pte::VIEW_HTML, array(
+    'template/sidebars.html'
 ));
 
 echo $pte->getElapsedTime();

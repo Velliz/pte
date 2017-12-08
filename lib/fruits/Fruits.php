@@ -91,11 +91,15 @@ class Fruits implements IFruits
     public function SetFruitMaster($MasterLocation)
     {
         if ($MasterLocation !== false) {
-            $Master = file_get_contents($MasterLocation);
-            if ($Master === false) {
-                throw new PteException(PteException::NOT_FOUND);
+            try {
+                $Master = file_get_contents($MasterLocation);
+                if ($Master === false) {
+                    throw new PteException(PteException::NOT_FOUND);
+                }
+                $this->Master = $Master;
+            } catch (PteException $pex) {
+                $this->UseMaster = false;
             }
-            $this->Master = $Master;
         } else {
             $this->UseMaster = false;
         }
@@ -111,15 +115,21 @@ class Fruits implements IFruits
     public function SetFruitBody($bodyLocation)
     {
         if ($bodyLocation !== false) {
-            $Body = file_get_contents($bodyLocation);
-            if ($Body === false) {
-                throw new PteException(PteException::NOT_FOUND);
+            try {
+                if (!file_exists($bodyLocation)) {
+                    throw new PteException(PteException::NOT_FOUND);
+                }
+                $Body = file_get_contents($bodyLocation);
+                $this->Location = $bodyLocation;
+
+                $extension = explode('.', $bodyLocation);
+
+                $this->Name = $extension[0];
+                $this->Extension = $extension[sizeof($extension) - 1];
+                $this->Body = $Body;
+            } catch (PteException $pex) {
+                $this->UseBody = false;
             }
-            $this->Location = $bodyLocation;
-            $extension = explode('.', $bodyLocation);
-            $this->Name = $extension[0];
-            $this->Extension = $extension[sizeof($extension) - 1];
-            $this->Body = $Body;
         } else {
             $this->UseBody = false;
         }
@@ -133,19 +143,23 @@ class Fruits implements IFruits
      */
     public function AddFruitSegments($SegmentLocation)
     {
-        $Segment = file_get_contents($SegmentLocation);
-        if ($Segment === false) {
-            throw new PteException(PteException::NOT_FOUND);
-        }
-        $Fragment = explode('/', $SegmentLocation);
-        $SegmentData = array(
-            'Location' => $SegmentLocation,
-            'Name' => $Fragment[count($Fragment) - 1],
-            'Data' => $Segment,
-        );
-        if (array_push($this->Segments, $SegmentData) > 0) {
-            return true;
-        } else {
+        try {
+            if (!file_exists($SegmentLocation)) {
+                throw new PteException(PteException::NOT_FOUND);
+            }
+            $Segment = file_get_contents($SegmentLocation);
+            $Fragment = explode('/', $SegmentLocation);
+            $SegmentData = array(
+                'Location' => $SegmentLocation,
+                'Name' => $Fragment[count($Fragment) - 1],
+                'Data' => $Segment,
+            );
+            if (array_push($this->Segments, $SegmentData) > 0) {
+                return true;
+            } else {
+                return false;
+            }
+        } catch (PteException $pex) {
             return false;
         }
     }
@@ -186,7 +200,6 @@ class Fruits implements IFruits
     {
         return $this->UseBody;
     }
-
 
 
     /**

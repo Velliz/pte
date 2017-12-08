@@ -1,8 +1,13 @@
 <?php
+
 namespace pte\exception;
 
 use Exception;
 
+/**
+ * Class PteException
+ * @package pte\exception
+ */
 class PteException extends Exception
 {
 
@@ -10,22 +15,31 @@ class PteException extends Exception
     const READ_ONLY = 10402;
     const REMOTE_ERROR = 10403;
 
-    private $Message = null;
+    /**
+     * @var string
+     */
+    private $Message = '';
 
+    /**
+     * PteException constructor.
+     * @param string $eCode
+     */
     public function __construct($eCode)
     {
         $this->SetError($eCode);
     }
 
-
+    /**
+     * @param $ErrorCode
+     */
     public function SetError($ErrorCode)
     {
         switch ($ErrorCode) {
             case PteException::NOT_FOUND:
-                $this->Message = sprintf("Not found (%s)", PteException::NOT_FOUND);
+                $this->Message = sprintf("Template specified not found (%s)", PteException::NOT_FOUND);
                 break;
             case PteException::READ_ONLY:
-                $this->Message = sprintf("File is read-only (%s)", PteException::READ_ONLY);
+                $this->Message = sprintf("Template file is read-only (%s)", PteException::READ_ONLY);
                 break;
             case PteException::REMOTE_ERROR:
                 $this->Message = sprintf("Connection failed (%s)", PteException::REMOTE_ERROR);
@@ -36,9 +50,12 @@ class PteException extends Exception
         }
     }
 
+    /**
+     * @return string
+     */
     function __toString()
     {
-        echo $this->Message;
+        return $this->Message;
     }
 
 }

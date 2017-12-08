@@ -83,7 +83,7 @@ You can set the data value like this:
 ```php
 $v = new BaseUrl();
 
-$pte->SetValue($v, array(
+$pte->SetValue(array(
     'FirstCircle' => 'Selamat Datang !',
     'WishList' => array(
         array(
@@ -146,7 +146,7 @@ and second is the data in array.
 Then you can get the result via **Output** method like this:
  
 ```php
-$pte->Output(Pte::VIEW_HTML);
+$pte->Output($v, Pte::VIEW_HTML);
 ```
 
 The output method is the part when the lexer and parser process the Html input.

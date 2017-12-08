@@ -6,10 +6,15 @@ interface CustomRender
 {
 
     /**
+     * @param $assets
+     */
+    public function RegisterAssets($assets);
+
+    /**
      * @param $fnName
      * @param $paramArray
      */
-    public function Register($fnName, $paramArray);
+    public function RegisterFunction($fnName, $paramArray);
 
     /**
      * @return string

@@ -16,4 +16,12 @@ abstract class Elements implements CustomRender
     {
 
     }
+
+    /**
+     * @return string
+     */
+    public function Parse()
+    {
+        return '<h1>TABLES</h1>';
+    }
 }

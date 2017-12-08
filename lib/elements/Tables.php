@@ -20,7 +20,6 @@ class Tables extends Elements
      */
     public function SetTags($tags)
     {
-
     }
 
     /**
@@ -39,11 +38,4 @@ class Tables extends Elements
     {
     }
 
-    /**
-     * @return string
-     */
-    public function Parse()
-    {
-        return '<h1>TABLES</h1>';
-    }
 }

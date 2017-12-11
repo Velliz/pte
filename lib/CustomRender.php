@@ -16,11 +16,6 @@ interface CustomRender
 {
 
     /**
-     * @param $assets
-     */
-    public function RegisterAssets($assets);
-
-    /**
      * @param $fnName
      * @param $paramArray
      */

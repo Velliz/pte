@@ -115,9 +115,9 @@ $pte->SetValue(array(
 ));
 
 //the implementation of CustomRenderer interface
-$base = new Base('url', array());
+$base = new Base();
 echo $pte->Output($base, Pte::VIEW_HTML, array(
     'template/sidebar.html'
 ));
-echo $pte->getElapsedTime();
+echo $pte->GetElapsedTime();
 

@@ -21,36 +21,43 @@ abstract class Parts implements CustomRender
     protected $assets;
     protected $data;
     protected $paramArray;
+
+    /**
+     * @var Pte
+     */
     protected $pte;
 
     /**
      * Elements constructor.
+     *
      * @param $tags
+     * match tag name in view
      * @param $data
+     * extra data to render in parts
+     *
+     * @param bool $cache
+     * @param bool $master
+     * @param bool $html
      */
-    public function __construct($tags, $data)
+    public function __construct($tags, $data, $cache = true, $master = false, $html = true)
     {
-        $this->pte = new Pte(true, false, true);
+        $this->pte = new Pte($cache, $master, $html);
         $this->tags = $tags;
         $this->data = $data;
     }
 
     /**
      * @param $fnName
+     * usually have same name as $tags
      * @param $paramArray
+     * input parameter from templates
+     *
+     * this function executed for pre process the custom definition before Parse is executed
      */
     public function RegisterFunction($fnName, $paramArray)
     {
         $this->fnName = $fnName;
         $this->paramArray = $paramArray;
-    }
-
-    /**
-     * @param $assets
-     */
-    public function RegisterAssets($assets)
-    {
-        $this->assets = $assets;
     }
 
 }

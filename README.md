@@ -20,6 +20,23 @@ composer require velliz/pte
 
 Or you can download it directly, run composer install after it. 
 
+### Tags Available
+
+| Tags | Description |
+| --- | --- |
+| `{!x}` | Value or Part Objects tags |
+| `<!--{!x}-->` | **open** loop tags |
+| `<!--{/x}-->` | **close** loop tags |
+| `{!fn()}` | **function** tags with no parameters |
+| `{!fn(x)}` | **function** tags with one parameters |
+| `{!fn(x,y,z)}` | **function** tags with multiple parameters |
+| `{CONTENT}` | **CONTENT** tags only works on master file |
+| `{!css(<link href="" rel="stylesheet" type="text/css" />)}` | **CSS** tags |
+| `{!js(<script src="" type="text/javascript"></script>)}` | **JavaScript** tags |
+| `{!part(css)}` | move **CSS** tags location to this tag |
+| `{!part(js)}` | move **JavaScript** tags location to this tag |
+| `{x.html}` | segment file tags |
+
 ### Usage sample
 
 Instance the object:

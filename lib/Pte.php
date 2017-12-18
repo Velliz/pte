@@ -233,7 +233,14 @@ class Pte
                 $this->_Output .= (double)$Data[$val['key']];
             } else if ($this->GetVarType($datum) === $this->ARRAYS) {
                 foreach ($datum as $k => $v) {
-                    $this->RenderHtml($val['child'], $v);
+                    if (is_array($v)) {
+                        //Numeric Array
+                        $this->RenderHtml($val['child'], $v);
+                    } else {
+                        //Associative Arrays
+                        $this->RenderHtml($val['child'], $datum);
+                        break;
+                    }
                 }
             } else if ($this->GetVarType($datum) === $this->BOOLEANS) {
                 if ($datum) {

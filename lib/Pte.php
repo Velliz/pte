@@ -132,7 +132,7 @@ class Pte
      * @return string
      * @throws PteException
      */
-    public function Output($CustomRender, $Type = Pte::VIEW_HTML, $Segments = array())
+    public function Output($CustomRender = null, $Type = Pte::VIEW_HTML, $Segments = array())
     {
 
         if ($this->fruits->isUseMaster()) {
@@ -250,7 +250,11 @@ class Pte
                 if ($datum instanceof Parts) {
                     $datum->RegisterFunction($val['key'], $val['param']);
                     if ($datum->tags === $datum->fnName) {
+                        //Append output
                         $this->_Output .= $datum->Parse();
+                        //Append property
+                        $this->tempCss .= $datum->pte->GetTempCss();
+                        $this->tempJs .= $datum->pte->GetTempJs();
                     }
                 } else {
                     throw new PteException(PteException::OUTPUT_ERROR);
@@ -318,6 +322,22 @@ class Pte
     public function GetElapsedTime()
     {
         return $this->ElapsedTime;
+    }
+
+    /**
+     * @return string
+     */
+    public function GetTempJs()
+    {
+        return $this->tempJs;
+    }
+
+    /**
+     * @return string
+     */
+    public function GetTempCss()
+    {
+        return $this->tempCss;
     }
 
 }

@@ -25,7 +25,7 @@ abstract class Parts implements CustomRender
     /**
      * @var Pte
      */
-    protected $pte;
+    var $pte;
 
     /**
      * Elements constructor.

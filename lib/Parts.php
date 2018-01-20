@@ -39,7 +39,7 @@ abstract class Parts implements CustomRender
      * @param bool $master
      * @param bool $html
      */
-    public function __construct($tags, $data, $cache = true, $master = false, $html = true)
+    public function __construct($tags, $data = array(), $cache = true, $master = false, $html = true)
     {
         $this->pte = new Pte($cache, $master, $html);
         $this->tags = $tags;

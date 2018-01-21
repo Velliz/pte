@@ -62,7 +62,7 @@ class Slicer
             $capture = new PregOffsetCapture($result);
 
             $lex = array();
-            $lex['text'] = trim(substr($template, $position, $capture->SliceBegin() - $position));
+            $lex['text'] = substr($template, $position, $capture->SliceBegin() - $position);
 
             $lex['start'] = $capture->SliceBegin();
             $lex['end'] = $capture->SliceEnd();

@@ -202,7 +202,7 @@ class Pte
             $datum = isset($Data[$val['key']]) ? $Data[$val['key']] : null;
             $hasChild = isset($val['child']) ? true : false;
 
-            $this->_Output .= sprintf("%s ", $val['text']);
+            $this->_Output .= $val['text'];
 
             if ($this->CustomRender !== null) {
                 $this->CustomRender->RegisterFunction($val['key'], $val['param']);

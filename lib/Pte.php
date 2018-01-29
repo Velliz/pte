@@ -134,35 +134,34 @@ class Pte
      */
     public function Output($CustomRender = null, $Type = Pte::VIEW_HTML, $Segments = array())
     {
-
-        if ($this->fruits->isUseMaster()) {
-            $this->fruits->SetFruitMaster($this->_MasterData);
-        }
-        if ($this->fruits->isUseBody()) {
-            $this->fruits->SetFruitBody($this->_HtmlData);
-        }
-
-        foreach ($Segments as $val) {
-            $this->fruits->AddFruitSegments($val);
-        }
-
-        if ($this->Cache) {
-            if (!file_exists($this->fruits->GetName())) {
-                $slicer = new Slicer();
-                $Content = $slicer->Lexer($this->fruits->GetFruitPack());
-                file_put_contents($this->fruits->GetName(), json_encode($Content));
-            } else {
-                $Content = json_decode(file_get_contents($this->fruits->GetName()), true);
-            }
-        } else {
-            $slicer = new Slicer();
-            $Content = $slicer->Lexer($this->fruits->GetFruitPack());
-        }
-
-        $this->CustomRender = $CustomRender;
-
         switch ($Type) {
             case Pte::VIEW_HTML:
+                if ($this->fruits->isUseMaster()) {
+                    $this->fruits->SetFruitMaster($this->_MasterData);
+                }
+                if ($this->fruits->isUseBody()) {
+                    $this->fruits->SetFruitBody($this->_HtmlData);
+                }
+
+                foreach ($Segments as $val) {
+                    $this->fruits->AddFruitSegments($val);
+                }
+
+                if ($this->Cache) {
+                    if (!file_exists($this->fruits->GetName())) {
+                        $slicer = new Slicer();
+                        $Content = $slicer->Lexer($this->fruits->GetFruitPack());
+                        file_put_contents($this->fruits->GetName(), json_encode($Content));
+                    } else {
+                        $Content = json_decode(file_get_contents($this->fruits->GetName()), true);
+                    }
+                } else {
+                    $slicer = new Slicer();
+                    $Content = $slicer->Lexer($this->fruits->GetFruitPack());
+                }
+
+                $this->CustomRender = $CustomRender;
+
                 $output = $this->RenderHtml($Content, $this->_Value);
                 break;
             case Pte::VIEW_JSON:

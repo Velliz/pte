@@ -98,6 +98,7 @@ class Fruits implements IFruits
                 }
                 $this->Master = $Master;
             } catch (PteException $pex) {
+                echo sprintf("<pre>%s Expected location: %s</pre>", $pex, $MasterLocation);
                 $this->UseMaster = false;
             }
         } else {
@@ -128,6 +129,7 @@ class Fruits implements IFruits
                 $this->Extension = $extension[sizeof($extension) - 1];
                 $this->Body = $Body;
             } catch (PteException $pex) {
+                echo sprintf("<pre>%s Expected location: %s</pre>", $pex, $bodyLocation);
                 $this->UseBody = false;
             }
         } else {

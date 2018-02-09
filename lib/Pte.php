@@ -255,8 +255,6 @@ class Pte
                         $this->tempCss .= $datum->pte->GetTempCss();
                         $this->tempJs .= $datum->pte->GetTempJs();
                     }
-                } else {
-                    throw new PteException(PteException::OUTPUT_ERROR);
                 }
             } else {
                 if ($hasChild && $datum !== null) {

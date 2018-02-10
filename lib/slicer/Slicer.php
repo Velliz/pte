@@ -33,7 +33,7 @@ class Slicer
 
         $length = strlen($template);
         $lex = array();
-        $lex['text'] = trim(substr($template, $position, $length));
+        $lex['text'] = substr($template, $position, $length);
         $lex['start'] = $position;
         $lex['end'] = $length;
         $lex['length'] = ($length - $position);

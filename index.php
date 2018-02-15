@@ -8,7 +8,6 @@ use pte\Pte;
 
 class Sidebar extends Parts
 {
-
     /**
      * @return string
      */
@@ -60,7 +59,7 @@ class Base implements CustomRender
     }
 }
 
-$pte = new Pte(true, true, true);
+$pte = new Pte(false, true, true);
 $pte->SetMaster('template/master.html');
 $pte->SetHtml('template/view.html');
 
@@ -95,7 +94,7 @@ $pte->SetValue(array(
     'Wishlist2' => array(
         'val' => 'DARI CONTROLLER',
     ),
-    'namaband' => 'GFriend Band',
+    'namaband' => 'Didit Velliz Band',
     'Umur' => 23,
     'Author' => 'Didit Velliz',
     'Member' => array(
@@ -109,7 +108,7 @@ $pte->SetValue(array(
             ),
         )
     ),
-    'NamaMember' => 'Asus A451LB LUAR',
+    'NamaMember' => 'Asus A451LB',
     //the implementation of Parts abstract class
     'tables' => new Sidebar('tables', array('Tab' => 'XYZ')),
 ));

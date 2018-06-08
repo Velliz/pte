@@ -57,6 +57,11 @@ class Pte
     private $_HtmlData = '';
 
     /**
+     * @var bool
+     */
+    private $_HtmlDataBinary = false;
+
+    /**
      * @var string
      */
     private $_MasterData = '{CONTENT}';
@@ -103,9 +108,11 @@ class Pte
 
     /**
      * @param string $Html
+     * @param bool $IsBinary
      */
-    public function SetHtml($Html = '')
+    public function SetHtml($Html = '', $IsBinary = false)
     {
+        $this->_HtmlDataBinary = $IsBinary;
         $this->_HtmlData = $Html;
     }
 
@@ -140,7 +147,7 @@ class Pte
                     $this->fruits->SetFruitMaster($this->_MasterData);
                 }
                 if ($this->fruits->isUseBody()) {
-                    $this->fruits->SetFruitBody($this->_HtmlData);
+                    $this->fruits->SetFruitBody($this->_HtmlData, $this->_HtmlDataBinary);
                 }
 
                 foreach ($Segments as $val) {

@@ -110,17 +110,22 @@ class Fruits implements IFruits
 
     /**
      * @param $bodyLocation
+     * @param $IsBinary
      * @return bool
-     * @throws PteException
      */
-    public function SetFruitBody($bodyLocation)
+    public function SetFruitBody($bodyLocation, $IsBinary)
     {
         if ($bodyLocation !== false) {
             try {
-                if (!file_exists($bodyLocation)) {
-                    throw new PteException(PteException::NOT_FOUND);
+                if (!$IsBinary) {
+                    if (!file_exists($bodyLocation)) {
+                        throw new PteException(PteException::NOT_FOUND);
+                    }
+                    $Body = file_get_contents($bodyLocation);
+                } else {
+                    $Body = $bodyLocation;
                 }
-                $Body = file_get_contents($bodyLocation);
+
                 $this->Location = $bodyLocation;
 
                 $extension = explode('.', $bodyLocation);

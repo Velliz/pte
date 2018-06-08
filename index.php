@@ -59,7 +59,7 @@ class Base implements CustomRender
     }
 }
 
-$pte = new Pte(false, true, true);
+$pte = new Pte(true, true, true);
 $pte->SetMaster('template/master.html');
 $pte->SetHtml('template/view.html');
 

@@ -47,7 +47,7 @@ class Pte
     private $CustomRender;
 
     /**
-     * @var bool
+     * @var PteCache|null
      */
     private $Cache = false;
 
@@ -94,14 +94,14 @@ class Pte
     /**
      * Pte constructor.
      *
-     * @param bool $cache
+     * @param PteCache $cacheDriver
      * @param bool $UseMaster
      * @param bool $UseBody
      */
-    public function __construct($cache = false, $UseMaster = false, $UseBody = true)
+    public function __construct(PteCache $cacheDriver = null, $UseMaster = false, $UseBody = true)
     {
         $this->ElapsedTime = microtime(true);
-        $this->Cache = $cache;
+        $this->Cache = $cacheDriver;
 
         $this->fruits = new Fruits($UseMaster, $UseBody);
     }
@@ -154,13 +154,14 @@ class Pte
                     $this->fruits->AddFruitSegments($val);
                 }
 
-                if ($this->Cache) {
-                    if (!file_exists($this->fruits->GetName())) {
+                if ($this->Cache instanceof PteCache) {
+                    $Content = $this->Cache->GetTemplate($this->fruits->GetBodyFileLocation());
+                    if (!$Content) {
                         $slicer = new Slicer();
-                        $Content = $slicer->Lexer($this->fruits->GetFruitPack());
-                        file_put_contents($this->fruits->GetName(), json_encode($Content));
-                    } else {
-                        $Content = json_decode(file_get_contents($this->fruits->GetName()), true);
+                        $Content = $this->Cache->SetTemplate(
+                            $this->fruits->GetBodyFileLocation(),
+                            $slicer->Lexer($this->fruits->GetFruitPack())
+                        );
                     }
                 } else {
                     $slicer = new Slicer();

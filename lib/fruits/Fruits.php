@@ -86,7 +86,6 @@ class Fruits implements IFruits
     /**
      * @param $MasterLocation
      * @return bool
-     * @throws PteException
      */
     public function SetFruitMaster($MasterLocation)
     {

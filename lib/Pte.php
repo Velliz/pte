@@ -94,11 +94,11 @@ class Pte
     /**
      * Pte constructor.
      *
-     * @param PteCache $cacheDriver
+     * @param PteCache|bool $cacheDriver
      * @param bool $UseMaster
      * @param bool $UseBody
      */
-    public function __construct(PteCache $cacheDriver = null, $UseMaster = false, $UseBody = true)
+    public function __construct($cacheDriver = null, $UseMaster = false, $UseBody = true)
     {
         $this->ElapsedTime = microtime(true);
         $this->Cache = $cacheDriver;

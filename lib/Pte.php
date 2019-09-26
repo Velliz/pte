@@ -204,6 +204,10 @@ class Pte
     {
         header('Content-Type: text/html');
 
+        if (!is_array($Content)) {
+            return $this->_Output;
+        }
+
         foreach ($Content as $key => $val) {
 
             $datum = isset($Data[$val['key']]) ? $Data[$val['key']] : null;

@@ -22,8 +22,11 @@ interface CustomRender
     public function RegisterFunction($fnName, $paramArray);
 
     /**
+     * @param array $data
+     * @param string $template
+     * @param bool $templateBinary
      * @return string
      */
-    public function Parse();
+    public function Parse($data = null, $template = '', $templateBinary = false);
 
 }

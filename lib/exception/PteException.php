@@ -33,6 +33,7 @@ class PteException extends Exception
      */
     public function __construct($eCode)
     {
+        parent::__construct();
         $this->SetError($eCode);
     }
 

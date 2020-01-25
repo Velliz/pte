@@ -1,18 +1,22 @@
 {
-    "name": "velliz/pte",
-    "description": "puko template engine",
-    "type": "library",
-    "license": "MIT",
-    "version": "0.1.6",
-    "authors": [
-        {
-            "name": "didit velliz",
-            "email": "diditvelliz@gmail.com"
-        }
-    ],
-    "autoload": {
-        "psr-4" : {
-            "pte\\": "lib/"
-        }
+  "name": "velliz/pte",
+  "description": "puko template engine",
+  "type": "library",
+  "license": "MIT",
+  "version": "0.1.6",
+  "authors": [
+    {
+      "name": "didit velliz",
+      "email": "diditvelliz@gmail.com"
     }
+  ],
+  "autoload": {
+    "psr-4": {
+      "pte\\": "lib/"
+    }
+  },
+  "require": {
+    "ext-json": "*",
+    "ext-xmlrpc": "*"
+  }
 }

@@ -145,7 +145,6 @@ class Fruits implements IFruits
     /**
      * @param $SegmentLocation
      * @return bool
-     * @throws PteException
      */
     public function AddFruitSegments($SegmentLocation)
     {

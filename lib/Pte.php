@@ -217,7 +217,7 @@ class Pte
 
             if ($this->CustomRender !== null) {
                 $this->CustomRender->RegisterFunction($val['key'], $val['param']);
-                $this->_Output .= $this->CustomRender->Parse();
+                $this->_Output .= $this->CustomRender->Parse($val['param'], $this->_HtmlData, $this->_HtmlDataBinary);
             }
 
             if ($val['param'] !== false) {

@@ -3,20 +3,27 @@
 include 'vendor/autoload.php';
 
 use pte\CustomRender;
+use pte\exception\PteException;
 use pte\Parts;
 use pte\Pte;
 
 class Sidebar extends Parts
 {
+
     /**
+     * @param array $data
+     * @param string $template
+     * @param bool $templateBinary
      * @return string
+     * @throws PteException
      */
-    public function Parse()
+    public function Parse($data = null, $template = '', $templateBinary = false)
     {
         $this->pte->SetHtml('template/sidebar.html');
         $this->pte->SetValue($this->data);
         return $this->pte->Output(null, Pte::VIEW_HTML);
     }
+
 }
 
 class Base implements CustomRender
@@ -30,12 +37,24 @@ class Base implements CustomRender
     protected $paramArray;
 
     /**
+     * @param string $data
+     * @param string $template
+     * @param bool $templateBinary
      * @return string
      */
-    public function Parse()
+    public function Parse($data = null, $template = '', $templateBinary = false)
     {
         if ($this->fnName === 'url') {
             return 'localhost' . $this->paramArray;
+        }
+        if ($this->fnName === 'lang') {
+            if ($data !== null && !$templateBinary) {
+                $resource = str_replace('.html', '.json', $template);
+                if (file_exists($resource)) {
+                    $resource = json_decode(file_get_contents($resource), true);
+                    return isset($resource[$data]) ? $resource[$data] : $data;
+                }
+            }
         }
         return '';
     }

@@ -18,7 +18,10 @@ Try it with composer command:
 composer require velliz/pte
 ```
 
-Or you can download it directly, run composer install after it. 
+Another requirement:
+
+* ext-json
+* ext-xmlrpc
 
 ### Tags Available
 
@@ -69,7 +72,7 @@ class BaseUrl implements \pte\CustomRender
     var $tempJs = '';
     var $tempCss = '';
 
-    public function Parse()
+    public function Parse($data = null, $template = '', $templateBinary = false)
     {
         if ($this->fn === 'url') {
             return 'http://localhost/' . $this->param;
@@ -169,6 +172,10 @@ $pte->Output($v, Pte::VIEW_HTML);
 The output method is the part when the lexer and parser process the Html input.
 You also have a choice for choosing *Pte::VIEW_JSON* for output.
 Happy coding :)
+
+---
+
+# Examples
 
 master.html
 

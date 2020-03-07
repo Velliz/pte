@@ -14,9 +14,5 @@
     "psr-4": {
       "pte\\": "lib/"
     }
-  },
-  "require": {
-    "ext-json": "*",
-    "ext-xmlrpc": "*"
   }
 }

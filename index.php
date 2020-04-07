@@ -83,6 +83,7 @@ $pte->SetMaster('template/master.html');
 $pte->SetHtml('template/view.html');
 
 $pte->SetValue(array(
+    'version' => '1.6',
     'FirstCircle' => 'Selamat Datang !',
     'WishList' => array(
         array(

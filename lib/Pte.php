@@ -170,6 +170,8 @@ class Pte
 
                 $this->CustomRender = $CustomRender;
 
+                header('Content-Type: text/html');
+
                 $output = $this->RenderHtml($Content, $this->_Value);
                 break;
             case Pte::VIEW_JSON:
@@ -202,12 +204,23 @@ class Pte
      */
     public function RenderHtml(&$Content, &$Data)
     {
-        header('Content-Type: text/html');
-
         if (!is_array($Content)) {
             return $this->_Output;
         }
 
+        //scan for assets first
+        foreach ($Content as $key => $val) {
+            if ($val['param'] !== false) {
+                if ($val['key'] === 'css') {
+                    $this->tempCss .= $val['param'];
+                }
+                if ($val['key'] === 'js') {
+                    $this->tempJs .= $val['param'];
+                }
+            }
+        }
+
+        //mix data into templates
         foreach ($Content as $key => $val) {
 
             $datum = isset($Data[$val['key']]) ? $Data[$val['key']] : null;
@@ -220,23 +233,19 @@ class Pte
                 $this->_Output .= $this->CustomRender->Parse($val['param'], $this->_HtmlData, $this->_HtmlDataBinary);
             }
 
-            if ($val['param'] !== false) {
-                if ($val['key'] === 'css') {
-                    $this->tempCss .= $val['param'];
+            //inject to master
+            if ($val['param'] !== false && $val['key'] === 'part') {
+                $slicer = new Slicer();
+                if ($val['param'] === 'css') {
+                    $l = $slicer->Lexer($this->tempCss);
+                    $this->tempCss = $this->RenderHtml($l, $Data);
                 }
-                if ($val['key'] === 'js') {
-                    $this->tempJs .= $val['param'];
-                }
-
-                if ($val['key'] === 'part') {
-                    if ($val['param'] === 'css') {
-                        $this->_Output .= $this->tempCss;
-                    }
-                    if ($val['param'] === 'js') {
-                        $this->_Output .= $this->tempJs;
-                    }
+                if ($val['param'] === 'js') {
+                    $l = $slicer->Lexer($this->tempJs);
+                    $this->tempJs = $this->RenderHtml($l, $Data);
                 }
             }
+
 
             if ($this->GetVarType($datum) === $this->STRINGS) {
                 $this->_Output .= (string)$Data[$val['key']];

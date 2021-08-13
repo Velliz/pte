@@ -292,8 +292,10 @@ class Pte
      */
     public function RenderJson(&$Data)
     {
-        header('Content-Type: application/json');
-        return json_encode($Data);
+        header('Content-Type: application/json; charset=utf-8');
+        //save output special characters
+        $Data = array_map('utf8_encode', $Data);
+        return json_encode($Data, JSON_UNESCAPED_UNICODE);
     }
 
     /**

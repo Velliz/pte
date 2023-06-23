@@ -1,22 +1,15 @@
 # PTE - Puko Templating Engine
 
-PTE is a standalone templating engine build for performance and compatible for standalone use. 
-PTE in action traverses a HTML DOM tree into a PHP array (lexer) and then combining output with data specs (parser).
-
-### Infograph
-
-Seconds average to render the html page with provided example in **index.php**
-
-* 0.004 s with caching off.
-* 0.002 s with caching on.
+PTE is a standalone templating engine built for performance and compatibility for standalone use. 
+When PTE is in action, it traverses an HTML DOM tree into a PHP array (lexer) and combines the output with data specifications (parser).
+On average, it takes 0.004 seconds to render the HTML page with caching turned off, 
+and 0.002 seconds with caching turned on, based on the provided example in `index.php`.
 
 ### Installation
 
-Try it with composer command:
+`composer require velliz/pte` 
 
-```
-composer require velliz/pte
-```
+The command is used to install the "velliz/pte" package using Composer. It adds the package as a dependency to your project.
 
 Another requirement:
 
@@ -46,19 +39,13 @@ Instance the object:
 
 ```php
 $pte = new Pte(false, true, true);
-```
-
-First param true for cache the template file. Second param true for using master file.
-Last param true for using html body file.
-
-Html file splitted into two piece.
-The first one is called master for base html template (you can see in **master.html** bellow) 
-and the other called html template (you can see in **view.html** bellow)
-
-```php
 $pte->SetMaster('template/master.html');
 $pte->SetHtml('template/view.html');
 ```
+
+In the code snippet above, an object of the Pte class is instantiated with three parameters: true for caching the template file, true for using the master file, and true for using the HTML body file.
+
+The master file is set using the SetMaster() method with the file path 'template/master.html', and the HTML file for the view template is set using the SetHtml() method with the file path 'template/view.html'.
 
 You also can create your own parsing rules with custom class like this:
 
@@ -92,13 +79,15 @@ class BaseUrl implements \pte\CustomRender
 }
 ```
 
-And using it to render tags in Html DOM like this:
+The above code defines the BaseUrl class, which implements the \pte\CustomRender interface. The Parse() method is used to define custom parsing rules for the templating engine. In this example, if the function name is 'url', it returns a URL constructed using the provided parameter. Otherwise, it returns an empty string.
+
+To render tags in the HTML DOM using the BaseUrl custom class, you can use the following code:
 
 ```php
 {!url(home)}
 ```
 
-You can set the data value like this:
+In order to set the data value, you can create an instance of the BaseUrl class and pass it as the first parameter to the SetValue() method. The second parameter should be the data in an array format. Here's an example:
 
 ```php
 $v = new BaseUrl();
@@ -160,18 +149,13 @@ $pte->SetValue(array(
 ));
 ```
 
-You will notice that **SetValue** method requires 2 input param, first the custom renderer class, 
-and second is the data in array.
-
-Then you can get the result via **Output** method like this:
+To obtain the result, you can use the Output() method, which processes the HTML input using the lexer and parser. Here's an example:
  
 ```php
 $pte->Output($v, Pte::VIEW_HTML);
 ```
 
-The output method is the part when the lexer and parser process the Html input.
-You also have a choice for choosing *Pte::VIEW_JSON* for output.
-Happy coding :)
+You also have the option to choose Pte::VIEW_JSON as the output format.
 
 ---
 
@@ -190,29 +174,29 @@ master.html
 <div class="container">
     <h1>Welcome to site {!Pass}</h1>
     <p>Today will be preparation {!url(/test/sumber)}</p>
-    Wish List 1
+    WishList 1
     <hr>
     <!--{!WishList}-->
-        <p>Mulai terjemahan - {!Lingkaran}</p>
+        <p>Mulai - {!Lingkaran}</p>
         <!--{!Anak}-->
-            <div>Ini anak 1 umur - {!Umur}</div>
+            <div>Ini anak 1 - {!Umur}</div>
             <!--{!Anak2}-->
-                <div>Ini anak 2 umur - {!Umur2}</div>
+                <div>Ini anak 2 - {!Umur2}</div>
             <!--{/Anak2}-->
-            <div>Ini ulangi anak 1 umur - {!Umur}</div>
+            <div>Ini ulangi anak 1 - {!Umur}</div>
         <!--{/Anak}-->
-        <h1>Sekilan</h1>
+        <h1>Sekian</h1>
     <!--{/WishList}-->
     <hr>
     <!--{!Wishlist2}-->
-    <p>Aku Testing dulu Whistlist 2 {!val}</p>
+    <p>Whistlist 2 {!val}</p>
     <!--{/Wishlist2}-->
 
     {CONTENT}
 
-    band1: {!namaband}
+    Band 1: {!namaband}
     <!--{!Wishlist2}-->
-    <p>Aku Testing dulu Whistlist 2 {!val}</p>
+    <p>Test Whistlist 2 {!val}</p>
     <!--{/Wishlist2}-->
 </div>
 
@@ -231,13 +215,7 @@ view.html
 {!css(<link href="template/bootstrap.css" rel="stylesheet" type="text/css" />)}
 
 <div>
-    Hello perkenalkan saya: {!Author}<br>
-    saya: {!Author}<br>
-    Hello saya: {!Author}<br>
-    Hello perkenalkan: {!Author}<br>
-    hehehe: {!Author}<br>
-    perkenalkan {!Author}<br>
-
+    Hello: {!Author}<br>
     <h5>Member</h5>
     <!--{!Member}-->
         {!NamaMember}
@@ -245,7 +223,7 @@ view.html
         {!Alamat}
         <br/>
         <!--{!Hobi}-->
-            Daftar Hobi: {!List}
+            Hobby: {!List}
         <!--{/Hobi}-->
     <!--{/Member}-->
 </div>

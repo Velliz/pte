@@ -293,7 +293,7 @@ class Pte
     public function RenderJson(&$Data)
     {
         header('Content-Type: application/json; charset=utf-8');
-        return json_encode($Data, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES | JSON_NUMERIC_CHECK);
+        return json_encode($Data, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
     }
 
     /**

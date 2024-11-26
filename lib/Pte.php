@@ -34,6 +34,7 @@ class Pte
     const VIEW_JSON = 2;
     const VIEW_XML = 3;
     const VIEW_NULL = 4;
+    const VIEW_JSON_NUMERIC = 5;
     #end region data types
 
     /**
@@ -177,6 +178,9 @@ class Pte
             case Pte::VIEW_JSON:
                 $output = $this->RenderJson($this->_Value);
                 break;
+            case Pte::VIEW_JSON_NUMERIC:
+                $output = $this->RenderJsonNumeric($this->_Value);
+                break;
             case Pte::VIEW_XML:
                 $output = $this->RenderXml($this->_Value);
                 break;
@@ -294,6 +298,16 @@ class Pte
     {
         header('Content-Type: application/json; charset=utf-8');
         return json_encode($Data, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
+    }
+
+    /**
+     * @param $Data
+     * @return string
+     */
+    public function RenderJsonNumeric(&$Data)
+    {
+        header('Content-Type: application/json; charset=utf-8');
+        return json_encode($Data, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES | JSON_NUMERIC_CHECK);
     }
 
     /**

@@ -1,67 +1,98 @@
 <?php
+/**
+ * PTE - Puko Templating Engine
+ * Example Usage File
+ * 
+ * This file demonstrates how to use PTE with various features:
+ * - Master pages
+ * - Loop iteration
+ * - Custom render functions
+ * - Part objects (reusable components)
+ * - Template segments
+ */
 
-include 'vendor/autoload.php';
+// ============================================================================
+// AUTOLOADER
+// ============================================================================
+
+require_once 'vendor/autoload.php';
 
 use pte\CustomRender;
 use pte\exception\PteException;
 use pte\Parts;
 use pte\Pte;
 
-class Sidebar extends Parts
-{
+// ============================================================================
+// CUSTOM RENDER FUNCTIONS
+// ============================================================================
 
-    /**
-     * @param array $data
-     * @param string $template
-     * @param bool $templateBinary
-     * @return string
-     * @throws PteException
-     */
-    public function Parse($data = null, $template = '', $templateBinary = false)
-    {
-        $this->pte->SetHtml('template/sidebar.html');
-        $this->pte->SetValue($this->data);
-        return $this->pte->Output(null, Pte::VIEW_HTML);
-    }
-
-}
-
+/**
+ * Base Custom Renderer
+ * 
+ * Implements CustomRender interface to provide custom parsing functions
+ * that can be used within templates.
+ * 
+ * Available functions:
+ * - {!url(path)}     : Generates full URL with base domain
+ * - {!lang(key)}     : Loads translation from JSON file
+ */
 class Base implements CustomRender
 {
-
-    var $tags;
-    var $fnName;
-
+    /** @var string|null Tag name being processed */
+    public $tags;
+    
+    /** @var string|null Function name called in template */
+    public $fnName;
+    
+    /** @var mixed */
     protected $assets;
+    
+    /** @var array|null Data passed to the function */
     protected $data;
+    
+    /** @var array|null Parameters passed to the function */
     protected $paramArray;
 
     /**
-     * @param string $data
-     * @param string $template
-     * @param bool $templateBinary
-     * @return string
+     * Parse function handler
+     * 
+     * Called when a custom function tag is encountered in the template.
+     * 
+     * @param mixed  $data              Data passed to the function (from template or SetValue)
+     * @param string $template          Current template file path
+     * @param bool   $templateBinary     Whether template is binary/string
+     * @return string                   Processed output
      */
     public function Parse($data = null, $template = '', $templateBinary = false)
     {
+        // URL builder function: {!url(path)}
         if ($this->fnName === 'url') {
             return 'localhost' . $this->paramArray;
         }
+        
+        // Language translation function: {!lang(key)}
         if ($this->fnName === 'lang') {
             if ($data !== null && !$templateBinary) {
+                // Try to load translation from JSON file (view.json)
                 $resource = str_replace('.html', '.json', $template);
                 if (file_exists($resource)) {
-                    $resource = json_decode(file_get_contents($resource), true);
-                    return isset($resource[$data]) ? $resource[$data] : $data;
+                    $translations = json_decode(file_get_contents($resource), true);
+                    return isset($translations[$data]) ? $translations[$data] : $data;
                 }
             }
         }
+        
         return '';
     }
 
     /**
-     * @param $fnName
-     * @param $paramArray
+     * Register function name and parameters
+     * 
+     * Called by PTE before Parse() to set the function context.
+     * 
+     * @param string $fnName     Function name from template (e.g., 'url')
+     * @param mixed  $paramArray  Parameters passed to the function
+     * @return void
      */
     public function RegisterFunction($fnName, $paramArray)
     {
@@ -70,7 +101,10 @@ class Base implements CustomRender
     }
 
     /**
-     * @param $assets
+     * Register assets (CSS/JS)
+     * 
+     * @param mixed $assets
+     * @return void
      */
     public function RegisterAssets($assets)
     {
@@ -78,65 +112,172 @@ class Base implements CustomRender
     }
 }
 
-$pte = new Pte(true, true, true);
+// ============================================================================
+// PART OBJECTS (REUSABLE COMPONENTS)
+// ============================================================================
+
+/**
+ * Sidebar Component
+ * 
+ * Example of a reusable Part object that can be embedded in templates.
+ * Part objects allow you to create self-contained UI components.
+ */
+class Sidebar extends Parts
+{
+    /**
+     * Parse and render the sidebar component
+     * 
+     * @param array  $data              Data passed from parent template
+     * @param string $template          Template file path (unused here)
+     * @param bool   $templateBinary    Whether template is binary
+     * @return string                   Rendered HTML
+     * @throws PteException
+     */
+    public function Parse($data = null, $template = '', $templateBinary = false)
+    {
+        // Set the template for this component
+        $this->pte->SetHtml('template/sidebar.html');
+        
+        // Pass component-specific data
+        $this->pte->SetValue($this->data);
+        
+        // Render and return the component HTML
+        return $this->pte->Output(null, Pte::VIEW_HTML);
+    }
+}
+
+// ============================================================================
+// MAIN TEMPLATE RENDERING
+// ============================================================================
+
+/**
+ * Initialize PTE
+ * 
+ * Constructor parameters:
+ * - $cacheDriver: PteCache instance for caching, or false to disable
+ * - $UseMaster:   true to enable master page layout
+ * - $UseBody:     true to enable body template parsing
+ */
+$pte = new Pte(
+    $cacheDriver = true,   // Enable caching
+    $UseMaster = true,     // Use master page
+    $UseBody = true        // Parse body template
+);
+
+// Set master template (layout)
 $pte->SetMaster('template/master.html');
+
+// Set view template (content)
 $pte->SetHtml('template/view.html');
 
-$pte->SetValue(array(
-    'version' => '1.6',
-    'FirstCircle' => 'Selamat Datang !',
-    'WishList' => array(
-        array(
-            'Lingkaran' => 'Bulat Sempurna 1',
-            'Anak' => array(
-                array(
-                    'Umur' => 20,
-                    'Anak2' => array(
-                        array('Umur2' => 41),
-                        array('Umur2' => 42),
-                        array('Umur2' => 43),
-                    ),
-                )
-            ),
-        ),
-        array(
-            'Lingkaran' => 'Bulat Sempurna 2',
-            'Anak' => array(
-                array(
-                    'Umur' => 46,
-                    'Anak2' => array(
-                        array('Umur2' => 9),
-                    ),
-                ),
-            ),
-        ),
-    ),
-    'Wishlist2' => array(
-        'val' => 'DARI CONTROLLER',
-    ),
-    'namaband' => 'Didit Velliz Band',
-    'Umur' => 23,
-    'Author' => 'Didit Velliz',
-    'Member' => array(
-        array(
-            'NamaMember' => 'Asus A451LB',
-            'Alamat' => 'JL Sukamekar 2 no 14',
-            'Hobi' => array(
-                array('List' => 'Berenang'),
-                array('List' => 'Nyuci'),
-                array('List' => 'Masak'),
-            ),
-        )
-    ),
-    'NamaMember' => 'Asus A451LB',
-    //the implementation of Parts abstract class
-    'tables' => new Sidebar('tables', array('Tab' => 'XYZ')),
-));
+// ============================================================================
+// TEMPLATE DATA
+// ============================================================================
 
-//the implementation of CustomRenderer interface
-$base = new Base();
-echo $pte->Output($base, Pte::VIEW_HTML, array(
-    'template/sidebar.html'
-));
-echo $pte->GetElapsedTime();
+/**
+ * Data to be rendered in the template
+ * 
+ * This data can include:
+ * - Simple values (strings, numbers, booleans)
+ * - Arrays for loops
+ * - Part objects for components
+ */
+$pte->SetValue([
+    // Application info
+    'version'       => '1.6.0',
+    'appName'       => 'PTE Demo Application',
+    
+    // Simple string values
+    'FirstCircle'  => 'Welcome to PTE!',
+    'Author'       => 'John Developer',
+    'AuthorEmail'  => 'john@example.com',
+    
+    // Numeric value
+    'Age'           => 28,
+    
+    // Nested array with multiple loop levels
+    'WishList'      => [
+        [
+            'Item'  => 'Wireless Headphones',
+            'Price' => 199.99,
+            'Links' => [
+                ['Url' => 'https://example.com/1'],
+                ['Url' => 'https://example.com/2'],
+                ['Url' => 'https://example.com/3'],
+            ],
+        ],
+        [
+            'Item'  => 'Mechanical Keyboard',
+            'Price' => 149.99,
+            'Links' => [
+                ['Url' => 'https://example.com/4'],
+            ],
+        ],
+    ],
+    
+    // Single associative array (renders once)
+    'Wishlist2' => [
+        'val' => 'From Controller Data',
+    ],
+    
+    // Array of objects (team members)
+    'TeamMembers' => [
+        [
+            'Name'     => 'Alice Smith',
+            'Role'     => 'Lead Developer',
+            'Skills'  => [
+                ['Skill' => 'PHP'],
+                ['Skill' => 'JavaScript'],
+                ['Skill' => 'Docker'],
+            ],
+        ],
+        [
+            'Name'     => 'Bob Johnson',
+            'Role'     => 'UI/UX Designer',
+            'Skills'  => [
+                ['Skill' => 'Figma'],
+                ['Skill' => 'CSS'],
+                ['Skill' => 'Accessibility'],
+            ],
+        ],
+    ],
+    
+    // Music genre example
+    'MusicGenre' => 'Electronic',
+    
+    // Part Object (reusable component)
+    'sidebar' => new Sidebar('sidebar', [
+        'Title'    => 'Quick Links',
+        'Links'    => [
+            ['Url' => '/dashboard', 'Label' => 'Dashboard'],
+            ['Url' => '/profile',   'Label' => 'Profile'],
+            ['Url' => '/settings',  'Label' => 'Settings'],
+        ],
+    ]),
+]);
 
+// ============================================================================
+// OUTPUT
+// ============================================================================
+
+/**
+ * Render the template
+ * 
+ * Parameters:
+ * - $customRender: CustomRender instance for custom functions (or null)
+ * - $outputType:    Output format (VIEW_HTML, VIEW_JSON, VIEW_XML, etc.)
+ * - $segments:      Additional template files to load as segments
+ */
+$customRenderer = new Base();
+
+$htmlOutput = $pte->Output(
+    $customRenderer,              // Custom render functions
+    Pte::VIEW_HTML,               // Output as HTML
+    ['template/sidebar.html']     // Additional template segments
+);
+
+// Display the rendered HTML
+echo $htmlOutput;
+
+// Display rendering time (for performance testing)
+echo "\n<!-- Rendered in " . $pte->GetElapsedTime() . " seconds -->\n";

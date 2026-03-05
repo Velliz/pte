@@ -1,244 +1,197 @@
 # PTE - Puko Templating Engine
 
-PTE is a standalone templating engine built for performance and compatibility for standalone use. 
-When PTE is in action, it traverses an HTML DOM tree into a PHP array (lexer) and combines the output with data specifications (parser).
-On average, it takes 0.004 seconds to render the HTML page with caching turned off, 
-and 0.002 seconds with caching turned on, based on the provided example in `index.php`.
+A lightweight, high-performance PHP templating engine designed for standalone use. PTE traverses HTML DOM trees into PHP arrays (lexer) and combines them with data specifications (parser) to render dynamic pages.
 
-### Installation
+## Features
 
-`composer require velliz/pte` 
+- **Fast Rendering** - ~0.004s without cache, ~0.002s with caching
+- **Master Pages** - Layout inheritance with `{CONTENT}` placeholder
+- **Looping** - Iterate over arrays in templates
+- **Custom Functions** - Create reusable parsing rules via `CustomRender` interface
+- **Partial Views** - Include external template segments
+- **Asset Management** - Automatic CSS/JS aggregation
+- **Multiple Output Formats** - HTML, JSON, XML support
 
-The command is used to install the "velliz/pte" package using Composer. It adds the package as a dependency to your project.
+## Requirements
 
-Another requirement:
+- PHP 5.6+
+- Composer
+- PHP Extensions: `ext-json`, `ext-xmlrpc`
 
-* ext-json
-* ext-xmlrpc
+## Installation
 
-### Tags Available
-
-| Tags | Description |
-| --- | --- |
-| `{!x}` | Value or Part Objects tags |
-| `<!--{!x}-->` | **open** loop tags |
-| `<!--{/x}-->` | **close** loop tags |
-| `{!fn()}` | **function** tags with no parameters |
-| `{!fn(x)}` | **function** tags with one parameters |
-| `{!fn(x,y,z)}` | **function** tags with multiple parameters |
-| `{CONTENT}` | **CONTENT** tags only works on master file |
-| `{!css(<link href="" rel="stylesheet" type="text/css" />)}` | **CSS** tags |
-| `{!js(<script src="" type="text/javascript"></script>)}` | **JavaScript** tags |
-| `{!part(css)}` | move **CSS** tags location to this tag |
-| `{!part(js)}` | move **JavaScript** tags location to this tag |
-| `{x.html}` | segment file tags |
-
-### Usage sample
-
-Instance the object:
-
-```php
-$pte = new Pte(false, true, true);
-$pte->SetMaster('template/master.html');
-$pte->SetHtml('template/view.html');
+```bash
+composer require velliz/pte
 ```
 
-In the code snippet above, an object of the Pte class is instantiated with three parameters: true for caching the template file, true for using the master file, and true for using the HTML body file.
-
-The master file is set using the SetMaster() method with the file path 'template/master.html', and the HTML file for the view template is set using the SetHtml() method with the file path 'template/view.html'.
-
-You also can create your own parsing rules with custom class like this:
+## Quick Start
 
 ```php
-class BaseUrl implements \pte\CustomRender
+<?php
+require 'vendor/autoload.php';
+
+use pte\Pte;
+
+$pte = new Pte(true, true, true);
+$pte->SetMaster('template/master.html');
+$pte->SetHtml('template/view.html');
+
+$pte->SetValue([
+    'title' => 'Hello World',
+    'users' => [
+        ['name' => 'John', 'email' => 'john@example.com'],
+        ['name' => 'Jane', 'email' => 'jane@example.com']
+    ]
+]);
+
+echo $pte->Output();
+```
+
+## Template Syntax
+
+### Value Tags
+```html
+<h1>{!title}</h1>
+```
+
+### Loops
+```html
+<!--{!users}-->
+    <p>{!name} - {!email}</p>
+<!--{/users}-->
+```
+
+### Master Pages
+```html
+<!-- master.html -->
+<!DOCTYPE html>
+<html>
+<body>
+    <header>My Site</header>
+    {CONTENT}
+</body>
+</html>
+```
+
+### Custom Functions
+```php
+class Assets implements \pte\CustomRender
 {
-
-    var $fn;
-    var $param;
-
-    var $tempJs = '';
-    var $tempCss = '';
-
     public function Parse($data = null, $template = '', $templateBinary = false)
     {
-        if ($this->fn === 'url') {
-            return 'http://localhost/' . $this->param;
+        if ($this->fn === 'cdn') {
+            return 'https://cdn.example.com/' . $this->param;
         }
         return '';
     }
 
-    /**
-     * @param $fnName
-     * @param $paramArray
-     */
-    public function Register($fnName, $paramArray)
+    public function RegisterFunction($fnName, $paramArray)
     {
         $this->fn = $fnName;
         $this->param = $paramArray;
     }
 }
+
+// Usage in template: {!cdn(js/app.js)}
+$pte->Output(new Assets());
 ```
 
-The above code defines the BaseUrl class, which implements the \pte\CustomRender interface. The Parse() method is used to define custom parsing rules for the templating engine. In this example, if the function name is 'url', it returns a URL constructed using the provided parameter. Otherwise, it returns an empty string.
-
-To render tags in the HTML DOM using the BaseUrl custom class, you can use the following code:
-
+### Part Objects (Reusable Components)
 ```php
-{!url(home)}
+<?php
+use pte\Parts;
+
+class Sidebar extends Parts
+{
+    public function Parse($data = null, $template = '', $templateBinary = false)
+    {
+        $this->pte->SetHtml('template/sidebar.html');
+        $this->pte->SetValue($this->data);
+        return $this->pte->Output(null, Pte::VIEW_HTML);
+    }
+}
+
+// Usage: 'sidebar' => new Sidebar('sidebar', ['title' => 'Menu'])
 ```
 
-In order to set the data value, you can create an instance of the BaseUrl class and pass it as the first parameter to the SetValue() method. The second parameter should be the data in an array format. Here's an example:
-
-```php
-$v = new BaseUrl();
-
-$pte->SetValue(array(
-    'FirstCircle' => 'Selamat Datang !',
-    'WishList' => array(
-        array(
-            'Lingkaran' => 'Bulat Sempurna 1',
-            'Anak' => array(
-                array(
-                    'Umur' => 20,
-                    'Anak2' => array(
-                        array('Umur2' => 41),
-                        array('Umur2' => 42),
-                        array('Umur2' => 43),
-                    ),
-                ),
-                array(
-                    'Umur' => 19,
-                    'Anak2' => array(
-                        array('Umur2' => 14),
-                        array('Umur2' => 15),
-                        array('Umur2' => 16),
-                    ),
-                )
-            ),
-        ),
-        array(
-            'Lingkaran' => 'Bulat Sempurna 2',
-            'Anak' => array(
-                array(
-                    'Umur' => 46,
-                    'Anak2' => array(
-                        array('Umur2' => 9),
-                    ),
-                ),
-            ),
-        ),
-    ),
-    'Wishlist2' => array(
-        'val' => 'DARI CONTROLLER',
-    ),
-    'namaband' => 'K-POP',
-    'Umur' => 23,
-    'Author' => 'Didit Velliz',
-    'Member' => array(
-        array(
-            'NamaMember' => 'Universitas X',
-            'Alamat' => 'Bandung, Indonesia',
-            'Hobi' => array(
-                array('List' => 'Makan'),
-                array('List' => 'Traveling'),
-                array('List' => 'Tidur'),
-            ),
-        )
-    ),
-    'NamaMember' => 'Laptop Gaming',
-));
-```
-
-To obtain the result, you can use the Output() method, which processes the HTML input using the lexer and parser. Here's an example:
- 
-```php
-$pte->Output($v, Pte::VIEW_HTML);
-```
-
-You also have the option to choose Pte::VIEW_JSON as the output format.
-
----
-
-# Examples
-
-master.html
-
+### CSS/JS Management
 ```html
-<!DOCTYPE html>
-<html>
-<head>
-    <base href="{!url(/)}">
-    <title>Page {!FirstCircle}</title>
-</head>
-<body>
-<div class="container">
-    <h1>Welcome to site {!Pass}</h1>
-    <p>Today will be preparation {!url(/test/sumber)}</p>
-    WishList 1
-    <hr>
-    <!--{!WishList}-->
-        <p>Mulai - {!Lingkaran}</p>
-        <!--{!Anak}-->
-            <div>Ini anak 1 - {!Umur}</div>
-            <!--{!Anak2}-->
-                <div>Ini anak 2 - {!Umur2}</div>
-            <!--{/Anak2}-->
-            <div>Ini ulangi anak 1 - {!Umur}</div>
-        <!--{/Anak}-->
-        <h1>Sekian</h1>
-    <!--{/WishList}-->
-    <hr>
-    <!--{!Wishlist2}-->
-    <p>Whistlist 2 {!val}</p>
-    <!--{/Wishlist2}-->
+<!-- In view.html -->
+{!css(<link href="css/style.css" rel="stylesheet" />)}
+{!js(<script src="js/app.js"></script>)}
 
-    {CONTENT}
-
-    Band 1: {!namaband}
-    <!--{!Wishlist2}-->
-    <p>Test Whistlist 2 {!val}</p>
-    <!--{/Wishlist2}-->
-</div>
-
-{!view(sidebar.html)}
-
+<!-- In master.html - assets are auto-aggregated -->
 {!part(css)}
 {!part(js)}
-
-</body>
-</html>
 ```
 
-view.html
+### Template Segments
+```php
+// Load additional templates
+$pte->Output($customRender, Pte::VIEW_HTML, [
+    'template/footer.html',
+    'template/sidebar.html'
+]);
 
-```html
-{!css(<link href="template/bootstrap.css" rel="stylesheet" type="text/css" />)}
-
-<div>
-    Hello: {!Author}<br>
-    <h5>Member</h5>
-    <!--{!Member}-->
-        {!NamaMember}
-        <br/>
-        {!Alamat}
-        <br/>
-        <!--{!Hobi}-->
-            Hobby: {!List}
-        <!--{/Hobi}-->
-    <!--{/Member}-->
-</div>
-
-{sidebar.html}
-
-NAMA MEMBER : {!NamaMember}
-<br>
-
-{!js(<script src="template/jquery.min.js" type="text/javascript"></script>)}
+<!-- In template -->
+{!view(sidebar.html)}
 ```
 
-## About
+## Output Formats
 
-Crafted with <3 from Bandung, Indonesia.
+```php
+// HTML (default)
+$pte->Output($custom, Pte::VIEW_HTML);
 
-Copyright 2017 by Didit Velliz
+// JSON
+$pte->Output(null, Pte::VIEW_JSON);
 
+// JSON with numeric strings
+$pte->Output(null, Pte::VIEW_JSON_NUMERIC);
+
+// XML
+$pte->Output(null, Pte::VIEW_XML);
+```
+
+## Configuration
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `$cacheDriver` | `PteCache\|bool` | Cache driver instance or `false` to disable |
+| `$UseMaster` | `bool` | Enable master page support |
+| `$UseBody` | `bool` | Enable body template parsing |
+
+```php
+// No caching, with master, with body
+$pte = new Pte(false, true, true);
+
+// With caching, with master, with body
+$pte = new Pte(new PteCache(), true, true);
+
+// Just body parsing, no master
+$pte = new Pte(false, false, true);
+```
+
+## Example Project Structure
+
+```
+project/
+├── index.php
+├── template/
+│   ├── master.html
+│   ├── view.html
+│   ├── sidebar.html
+│   └── partial.html
+└── vendor/
+    └── velliz/pte/
+```
+
+## Performance
+
+Benchmarks (rendering sample page):
+- **Without cache**: ~0.004 seconds
+- **With cache**: ~0.002 seconds
+
+## License
+
+MIT License - Copyright 2017 Didit Velliz

@@ -1,4 +1,7 @@
 <?php
+
+declare(strict_types=1);
+
 namespace pte\fruits;
 
 /**
@@ -14,7 +17,15 @@ namespace pte\fruits;
 interface IFruits
 {
 
+    /**
+     * Regex friendly identifier of the content placeholder.
+     */
     const CONTENT_IDENTIFIER = '({CONTENT})';
+
+    /**
+     * Literal placeholder that is replaced with the body of the template.
+     */
+    const CONTENT_PLACEHOLDER = '{CONTENT}';
 
     public function GetFruitPack();
 

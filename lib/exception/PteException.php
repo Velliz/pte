@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace pte\exception;
 
 use Exception;
@@ -17,30 +19,35 @@ use Exception;
 class PteException extends Exception
 {
 
-    const NOT_FOUND = 10401;
-    const READ_ONLY = 10402;
-    const REMOTE_ERROR = 10403;
-    const OUTPUT_ERROR = 10404;
+    public const NOT_FOUND = 10401;
+    public const READ_ONLY = 10402;
+    public const REMOTE_ERROR = 10403;
+    public const OUTPUT_ERROR = 10404;
 
     /**
      * @var string
      */
-    private $Message = '';
+    private string $Message = '';
 
     /**
      * PteException constructor.
-     * @param string $eCode
+     *
+     * @param int $eCode
      */
-    public function __construct($eCode)
+    public function __construct(int $eCode)
     {
-        parent::__construct();
         $this->SetError($eCode);
+
+        // The message is handed over to the parent constructor as well, so
+        // getMessage() and getCode() behave like they do for any other
+        // exception instead of returning an empty string.
+        parent::__construct($this->Message, $eCode);
     }
 
     /**
-     * @param $ErrorCode
+     * @param int $ErrorCode
      */
-    public function SetError($ErrorCode)
+    public function SetError(int $ErrorCode)
     {
         switch ($ErrorCode) {
             case PteException::NOT_FOUND:
@@ -64,7 +71,7 @@ class PteException extends Exception
     /**
      * @return string
      */
-    function __toString()
+    public function __toString(): string
     {
         return $this->Message;
     }

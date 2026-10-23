@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace pte\fruits;
 
 use pte\exception\PteException;
@@ -21,20 +23,20 @@ class Fruits implements IFruits
      * @var string
      * Overall template after combined
      */
-    public $Template = "";
+    public string $Template = "";
 
     /**
      * @var string
      */
-    private $Master = "{CONTENT}";
+    private string $Master = "{CONTENT}";
 
     /**
      * @var string
      */
-    private $Body = "";
+    private string $Body = "";
 
     /**
-     * @var array|bool
+     * @var array
      *
      * Use segments for mix more than a fruit.
      *
@@ -45,56 +47,62 @@ class Fruits implements IFruits
      *  'Data' => '<div>Hello World</div>'
      * )
      */
-    protected $Segments = array();
+    protected array $Segments = [];
 
     /**
      * @var bool
      */
-    protected $UseMaster;
+    protected bool $UseMaster;
 
     /**
      * @var bool
      */
-    protected $UseBody;
+    protected bool $UseBody;
+
+    /**
+     * @var string|null
+     */
+    public ?string $Name = null;
+
+    /**
+     * @var string|null
+     */
+    public ?string $Extension = null;
 
     /**
      * @var string
      */
-    public $Name;
-
-    /**
-     * @var string
-     */
-    public $Extension;
-
-    /**
-     * @var string
-     */
-    protected $Location;
+    protected string $Location = '';
 
     /**
      * RawTemplate constructor.
-     * @param $UseMaster
-     * @param $UseBody
+     *
+     * @param bool|null $UseMaster
+     * @param bool|null $UseBody
      */
-    public function __construct($UseMaster = false, $UseBody = true)
+    public function __construct(?bool $UseMaster = false, ?bool $UseBody = true)
     {
-        $this->UseMaster = $UseMaster;
-        $this->UseBody = $UseBody;
+        $this->UseMaster = (bool)$UseMaster;
+        $this->UseBody = (bool)$UseBody;
     }
 
     /**
-     * @param $MasterLocation
+     * @param string|false $MasterLocation
      * @return bool
      */
-    public function SetFruitMaster($MasterLocation)
+    public function SetFruitMaster(string|false $MasterLocation)
     {
         if ($MasterLocation !== false) {
             try {
+                if (!file_exists($MasterLocation)) {
+                    throw new PteException(PteException::NOT_FOUND);
+                }
+
                 $Master = file_get_contents($MasterLocation);
                 if ($Master === false) {
                     throw new PteException(PteException::NOT_FOUND);
                 }
+
                 $this->Master = $Master;
             } catch (PteException $pex) {
                 echo sprintf("<pre>%s Expected location: %s</pre>", $pex, $MasterLocation);
@@ -108,11 +116,11 @@ class Fruits implements IFruits
     }
 
     /**
-     * @param $bodyLocation
-     * @param $IsBinary
+     * @param string|false $bodyLocation
+     * @param bool $IsBinary
      * @return bool
      */
-    public function SetFruitBody($bodyLocation, $IsBinary)
+    public function SetFruitBody(string|false $bodyLocation, bool $IsBinary)
     {
         if ($bodyLocation !== false) {
             try {
@@ -120,17 +128,22 @@ class Fruits implements IFruits
                     if (!file_exists($bodyLocation)) {
                         throw new PteException(PteException::NOT_FOUND);
                     }
+
                     $Body = file_get_contents($bodyLocation);
+                    if ($Body === false) {
+                        throw new PteException(PteException::NOT_FOUND);
+                    }
                 } else {
                     $Body = $bodyLocation;
                 }
 
                 $this->Location = $bodyLocation;
 
-                $extension = explode('.', $bodyLocation);
+                if (!$IsBinary) {
+                    $this->Name = pathinfo($bodyLocation, PATHINFO_FILENAME);
+                    $this->Extension = pathinfo($bodyLocation, PATHINFO_EXTENSION);
+                }
 
-                $this->Name = $extension[0];
-                $this->Extension = $extension[sizeof($extension) - 1];
                 $this->Body = $Body;
             } catch (PteException $pex) {
                 echo sprintf("<pre>%s Expected location: %s</pre>", $pex, $bodyLocation);
@@ -139,38 +152,45 @@ class Fruits implements IFruits
         } else {
             $this->UseBody = false;
         }
+
         return true;
     }
 
     /**
-     * @param $SegmentLocation
+     * @param string $SegmentLocation
      * @return bool
      */
-    public function AddFruitSegments($SegmentLocation)
+    public function AddFruitSegments(string $SegmentLocation)
     {
         try {
             if (!file_exists($SegmentLocation)) {
                 throw new PteException(PteException::NOT_FOUND);
             }
+
             $Segment = file_get_contents($SegmentLocation);
+            if ($Segment === false) {
+                throw new PteException(PteException::NOT_FOUND);
+            }
+
             $Fragment = explode('/', $SegmentLocation);
             $SegmentData = array(
                 'Location' => $SegmentLocation,
                 'Name' => $Fragment[count($Fragment) - 1],
                 'Data' => $Segment,
             );
+
             if (array_push($this->Segments, $SegmentData) > 0) {
                 return true;
-            } else {
-                return false;
             }
+
+            return false;
         } catch (PteException $pex) {
             return false;
         }
     }
 
     /**
-     * @return bool|string
+     * @return string
      */
     public function GetFruitPack()
     {
@@ -178,15 +198,20 @@ class Fruits implements IFruits
             $this->Template = "";
             return $this->Template;
         }
+
         if (!$this->UseMaster) {
             $this->Template = $this->Body;
         } else {
-            $this->Template = preg_replace(IFruits::CONTENT_IDENTIFIER, $this->Body, $this->Master);
+            // str_replace() is used instead of preg_replace(), the replacement
+            // is taken literally and can therefore never be interpreted as a
+            // back reference.
+            $this->Template = str_replace(IFruits::CONTENT_PLACEHOLDER, $this->Body, $this->Master);
         }
+
         foreach ($this->Segments as $Item) {
-            $keywords = sprintf("({%s})", $Item['Name']);
-            $this->Template = preg_replace($keywords, $Item['Data'], $this->Template);
+            $this->Template = str_replace('{' . $Item['Name'] . '}', $Item['Data'], $this->Template);
         }
+
         return $this->Template;
     }
 
@@ -210,9 +235,9 @@ class Fruits implements IFruits
     /**
      * @return string
      */
-    function __toString()
+    public function __toString(): string
     {
-        return $this->GetFruitPack();
+        return (string)$this->GetFruitPack();
     }
 
     /**

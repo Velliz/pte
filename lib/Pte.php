@@ -1,10 +1,13 @@
 <?php
 
+declare(strict_types=1);
+
 namespace pte;
 
 use pte\exception\PteException;
 use pte\fruits\Fruits;
 use pte\slicer\Slicer;
+use pte\utility\XmlRpcEncoder;
 
 /**
  * Class Pte
@@ -20,107 +23,110 @@ class Pte
 {
 
     #region data types
-    private $ARRAYS = 0;
-    private $STRINGS = 1;
-    private $BOOLEANS = 2;
-    private $NULLS = 4;
-    private $NUMERIC = 5;
-    private $OBJECTS = 6;
-    private $UNDEFINED = 7;
+    /**
+     * Value types returned by {@see Pte::GetVarType()}.
+     */
+    private const TYPE_ARRAYS = 0;
+    private const TYPE_STRINGS = 1;
+    private const TYPE_BOOLEANS = 2;
+    private const TYPE_NULLS = 4;
+    private const TYPE_NUMERIC = 5;
+    private const TYPE_OBJECTS = 6;
+    private const TYPE_UNDEFINED = 7;
     #end region data types
 
     #region view types
-    const VIEW_HTML = 1;
-    const VIEW_JSON = 2;
-    const VIEW_XML = 3;
-    const VIEW_NULL = 4;
-    const VIEW_JSON_NUMERIC = 5;
-    #end region data types
+    public const VIEW_HTML = 1;
+    public const VIEW_JSON = 2;
+    public const VIEW_XML = 3;
+    public const VIEW_NULL = 4;
+    public const VIEW_JSON_NUMERIC = 5;
+    #end region view types
 
     /**
      * @var float
      */
-    private $ElapsedTime = 0.0;
+    private float $ElapsedTime = 0.0;
 
     /**
-     * @var CustomRender
+     * @var CustomRender|null
      */
-    private $CustomRender;
+    private ?CustomRender $CustomRender = null;
 
     /**
-     * @var PteCache|null
+     * @var PteCache|bool|null
      */
-    private $Cache = false;
+    private PteCache|bool|null $Cache = null;
 
     /**
      * @var string
      */
-    private $_HtmlData = '';
+    private string $_HtmlData = '';
 
     /**
      * @var bool
      */
-    private $_HtmlDataBinary = false;
+    private bool $_HtmlDataBinary = false;
 
     /**
      * @var string
      */
-    private $_MasterData = '{CONTENT}';
+    private string $_MasterData = '{CONTENT}';
 
     /**
      * @var string
      */
-    private $_Output = '';
+    private string $_Output = '';
 
     /**
      * @var array
      */
-    private $_Value = array();
+    private array $_Value = [];
 
     /**
      * @var string
      */
-    private $tempJs = '';
+    private string $tempJs = '';
 
     /**
      * @var string
      */
-    private $tempCss = '';
+    private string $tempCss = '';
 
     /**
      * @var Fruits
      */
-    private $fruits;
+    private Fruits $fruits;
 
     /**
      * Pte constructor.
      *
-     * @param PteCache|bool $cacheDriver
-     * @param bool $UseMaster
-     * @param bool $UseBody
+     * @param PteCache|bool|null $cacheDriver
+     * @param bool|null $UseMaster
+     * @param bool|null $UseBody
      */
-    public function __construct($cacheDriver = null, $UseMaster = false, $UseBody = true)
+    public function __construct(PteCache|bool|null $cacheDriver = null, ?bool $UseMaster = false, ?bool $UseBody = true)
     {
         $this->ElapsedTime = microtime(true);
         $this->Cache = $cacheDriver;
 
-        $this->fruits = new Fruits($UseMaster, $UseBody);
+        $this->fruits = new Fruits((bool)$UseMaster, (bool)$UseBody);
     }
 
     /**
      * @param string $Html
-     * @param bool $IsBinary
+     * @param bool|null $IsBinary
      */
-    public function SetHtml($Html = '', $IsBinary = false)
+    public function SetHtml(string $Html = '', ?bool $IsBinary = false)
     {
-        $this->_HtmlDataBinary = $IsBinary;
+        $this->_HtmlDataBinary = (bool)$IsBinary;
         $this->_HtmlData = $Html;
     }
 
     /**
      * @param string $Master
      */
-    public function SetMaster($Master = '{CONTENT}')
+    public function SetMaster(string $Master = '{CONTENT}')
     {
         $this->_MasterData = $Master;
     }
@@ -128,22 +134,34 @@ class Pte
     /**
      * @param array $Value
      */
-    public function SetValue($Value = array())
+    public function SetValue(array $Value = [])
     {
         $this->_Value = $Value;
     }
 
     /**
-     * @param CustomRender $CustomRender
-     * @param int $Type
-     * @param array $Segments
-     * @return string
+     * @param CustomRender|null $CustomRender
+     * @param int|null $Type
+     * @param array|null $Segments
+     * @return string|null
      * @throws PteException
      */
-    public function Output($CustomRender = null, $Type = Pte::VIEW_HTML, $Segments = array())
+    public function Output(?CustomRender $CustomRender = null, ?int $Type = Pte::VIEW_HTML, ?array $Segments = [])
     {
+        // Every run starts from a clean slate, otherwise the buffers would
+        // accumulate the output of the previous call.
+        $this->_Output = '';
+        $this->tempCss = '';
+        $this->tempJs = '';
+        $this->ElapsedTime = microtime(true);
+
         switch ($Type) {
             case Pte::VIEW_HTML:
+                // The header has to be sent before anything is written to the
+                // output buffer, otherwise PHP complains about headers that
+                // were already sent.
+                $this->SendHeader('Content-Type: text/html');
+
                 if ($this->fruits->isUseMaster()) {
                     $this->fruits->SetFruitMaster($this->_MasterData);
                 }
@@ -151,27 +169,13 @@ class Pte
                     $this->fruits->SetFruitBody($this->_HtmlData, $this->_HtmlDataBinary);
                 }
 
-                foreach ($Segments as $val) {
+                foreach ($Segments ?? [] as $val) {
                     $this->fruits->AddFruitSegments($val);
                 }
 
-                if ($this->Cache instanceof PteCache) {
-                    $Content = $this->Cache->GetTemplate($this->fruits->GetBodyFileLocation());
-                    if (!$Content) {
-                        $slicer = new Slicer();
-                        $Content = $this->Cache->SetTemplate(
-                            $this->fruits->GetBodyFileLocation(),
-                            $slicer->Lexer($this->fruits->GetFruitPack())
-                        );
-                    }
-                } else {
-                    $slicer = new Slicer();
-                    $Content = $slicer->Lexer($this->fruits->GetFruitPack());
-                }
+                $Content = $this->BuildContent();
 
                 $this->CustomRender = $CustomRender;
-
-                header('Content-Type: text/html');
 
                 $output = $this->RenderHtml($Content, $this->_Value);
                 break;
@@ -189,12 +193,40 @@ class Pte
                 break;
             default:
                 throw new PteException(PteException::OUTPUT_ERROR);
-                break;
         }
 
         $this->ElapsedTime = (microtime(true) - $this->ElapsedTime);
 
         return $output;
+    }
+
+    /**
+     * Slice the template, using the cache driver when one is available.
+     *
+     * @return array
+     */
+    private function BuildContent(): array
+    {
+        $location = $this->fruits->GetBodyFileLocation();
+
+        if ($this->Cache instanceof PteCache) {
+            $Content = $this->Cache->GetTemplate($location);
+            if (is_array($Content) && $Content !== []) {
+                return $Content;
+            }
+        }
+
+        $slicer = new Slicer();
+        $Content = $slicer->Lexer($this->fruits->GetFruitPack());
+
+        if ($this->Cache instanceof PteCache) {
+            $Cached = $this->Cache->SetTemplate($location, $Content);
+            if (is_array($Cached)) {
+                return $Cached;
+            }
+        }
+
+        return $Content;
     }
 
     /**
@@ -212,82 +244,127 @@ class Pte
             return $this->_Output;
         }
 
+        $this->RenderNodes($Content, $Data);
+
+        return $this->_Output;
+    }
+
+    /**
+     * Render a set of template nodes and append them to the output buffer.
+     *
+     * @param array $Content
+     * @param mixed $Data
+     * @return void
+     */
+    private function RenderNodes(array $Content, mixed $Data): void
+    {
+        $Data = is_array($Data) ? $Data : [];
+
         //scan for assets first
-        foreach ($Content as $key => $val) {
-            if ($val['param'] !== false) {
-                if ($val['key'] === 'css') {
-                    $this->tempCss .= $val['param'];
+        foreach ($Content as $val) {
+            $param = $val['param'] ?? false;
+            if ($param !== false) {
+                if (($val['key'] ?? null) === 'css') {
+                    $this->tempCss .= $param;
                 }
-                if ($val['key'] === 'js') {
-                    $this->tempJs .= $val['param'];
+                if (($val['key'] ?? null) === 'js') {
+                    $this->tempJs .= $param;
                 }
             }
         }
 
         //mix data into templates
-        foreach ($Content as $key => $val) {
+        foreach ($Content as $val) {
+            $key = $val['key'] ?? false;
+            $param = $val['param'] ?? false;
+            $hasChild = isset($val['child']) && is_array($val['child']);
 
-            $datum = isset($Data[$val['key']]) ? $Data[$val['key']] : null;
-            $hasChild = isset($val['child']) ? true : false;
-
-            $this->_Output .= $val['text'];
+            $this->_Output .= $val['text'] ?? '';
 
             if ($this->CustomRender !== null) {
-                $this->CustomRender->RegisterFunction($val['key'], $val['param']);
-                $this->_Output .= $this->CustomRender->Parse($val['param'], $this->_HtmlData, $this->_HtmlDataBinary);
+                $this->CustomRender->RegisterFunction($key, $param);
+                $this->_Output .= (string)$this->CustomRender->Parse($param, $this->_HtmlData, $this->_HtmlDataBinary);
             }
 
             //inject to master
-            if ($val['param'] !== false && $val['key'] === 'part') {
+            if ($param !== false && $key === 'part') {
                 $slicer = new Slicer();
-                if ($val['param'] === 'css') {
-                    $l = $slicer->Lexer($this->tempCss);
-                    $this->tempCss = $this->RenderHtml($l, $Data);
+                if ($param === 'css') {
+                    $this->RenderChunk($slicer->Lexer($this->tempCss), $Data);
                 }
-                if ($val['param'] === 'js') {
-                    $l = $slicer->Lexer($this->tempJs);
-                    $this->tempJs = $this->RenderHtml($l, $Data);
+                if ($param === 'js') {
+                    $this->RenderChunk($slicer->Lexer($this->tempJs), $Data);
                 }
             }
 
+            // A node without a key is plain text, there is nothing to replace.
+            if ($key === false) {
+                continue;
+            }
 
-            if ($this->GetVarType($datum) === $this->STRINGS) {
-                $this->_Output .= (string)$Data[$val['key']];
-            } else if ($this->GetVarType($datum) === $this->NUMERIC) {
-                $this->_Output .= (double)$Data[$val['key']];
-            } else if ($this->GetVarType($datum) === $this->ARRAYS) {
-                foreach ($datum as $k => $v) {
-                    if (is_array($v)) {
-                        //Numeric Array
-                        $this->RenderHtml($val['child'], $v);
-                    } else {
-                        //Associative Arrays
-                        $this->RenderHtml($val['child'], $datum);
-                        break;
+            $datum = $Data[$key] ?? null;
+
+            switch ($this->GetVarType($datum)) {
+                case self::TYPE_STRINGS:
+                    $this->_Output .= (string)$datum;
+                    break;
+                case self::TYPE_NUMERIC:
+                    $this->_Output .= (float)$datum;
+                    break;
+                case self::TYPE_ARRAYS:
+                    foreach ($datum as $v) {
+                        if (is_array($v)) {
+                            //Numeric Array
+                            $this->RenderChunk($val['child'] ?? null, $v);
+                        } else {
+                            //Associative Arrays
+                            $this->RenderChunk($val['child'] ?? null, $datum);
+                            break;
+                        }
                     }
-                }
-            } else if ($this->GetVarType($datum) === $this->BOOLEANS) {
-                if ($datum) {
-                    $this->RenderHtml($val['child'], $datum);
-                }
-            } else if ($this->GetVarType($datum) === $this->OBJECTS) {
-                if ($datum instanceof Parts) {
-                    $datum->RegisterFunction($val['key'], $val['param']);
-                    if ($datum->tags === $datum->fnName) {
-                        //Append output
-                        $this->_Output .= $datum->Parse();
-                        //Append property
-                        $this->tempCss .= $datum->pte->GetTempCss();
-                        $this->tempJs .= $datum->pte->GetTempJs();
+                    break;
+                case self::TYPE_BOOLEANS:
+                    if ($datum) {
+                        $this->RenderChunk($val['child'] ?? null, $datum);
                     }
-                }
-            } else {
-                if ($hasChild && $datum !== null) {
-                    $this->RenderHtml($val['child'], $datum);
-                }
+                    break;
+                case self::TYPE_OBJECTS:
+                    if ($datum instanceof Parts) {
+                        $datum->RegisterFunction($key, $param);
+                        if ($datum->tags === $datum->fnName) {
+                            //Append output
+                            $this->_Output .= $datum->Parse();
+                            //Append property
+                            $this->tempCss .= $datum->pte->GetTempCss();
+                            $this->tempJs .= $datum->pte->GetTempJs();
+                        }
+                    }
+                    break;
+                default:
+                    if ($hasChild && $datum !== null) {
+                        $this->RenderChunk($val['child'], $datum);
+                    }
             }
         }
-        return $this->_Output;
+    }
+
+    /**
+     * Render a chunk of nodes and return the part that was added to the buffer.
+     *
+     * @param mixed $Content
+     * @param mixed $Data
+     * @return string
+     */
+    private function RenderChunk(mixed $Content, mixed $Data): string
+    {
+        if (!is_array($Content)) {
+            return '';
+        }
+
+        $length = strlen($this->_Output);
+        $this->RenderNodes($Content, $Data);
+
+        return substr($this->_Output, $length);
     }
 
     /**
@@ -296,7 +373,7 @@ class Pte
      */
     public function RenderJson(&$Data)
     {
-        header('Content-Type: application/json; charset=utf-8');
+        $this->SendHeader('Content-Type: application/json; charset=utf-8');
         return json_encode($Data, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
     }
 
@@ -306,18 +383,36 @@ class Pte
      */
     public function RenderJsonNumeric(&$Data)
     {
-        header('Content-Type: application/json; charset=utf-8');
+        $this->SendHeader('Content-Type: application/json; charset=utf-8');
         return json_encode($Data, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES | JSON_NUMERIC_CHECK);
     }
 
     /**
+     * Render the data as an XML-RPC document.
+     *
+     * The encoder is shipped with the library because ext/xmlrpc was removed
+     * from the PHP core in PHP 8.0 and only lives on as a PECL extension.
+     *
      * @param $Data
      * @return string
      */
     public function RenderXml(&$Data)
     {
-        header('Content-Type: application/xml');
-        return xmlrpc_encode($Data);
+        $this->SendHeader('Content-Type: application/xml; charset=utf-8');
+        return XmlRpcEncoder::encode($Data);
+    }
+
+    /**
+     * Send a header, but only when it is still possible to do so.
+     *
+     * @param string $ContentType
+     * @return void
+     */
+    private function SendHeader(string $ContentType): void
+    {
+        if (!headers_sent()) {
+            header($ContentType);
+        }
     }
 
     /**
@@ -326,25 +421,15 @@ class Pte
      */
     protected function GetVarType($var)
     {
-        if (is_object($var)) {
-            return $this->OBJECTS;
-        }
-        if (is_array($var)) {
-            return $this->ARRAYS;
-        }
-        if (is_null($var)) {
-            return $this->NULLS;
-        }
-        if (is_string($var)) {
-            return $this->STRINGS;
-        }
-        if (is_bool($var)) {
-            return $this->BOOLEANS;
-        }
-        if (is_numeric($var)) {
-            return $this->NUMERIC;
-        }
-        return $this->UNDEFINED;
+        return match (true) {
+            is_object($var) => self::TYPE_OBJECTS,
+            is_array($var) => self::TYPE_ARRAYS,
+            is_null($var) => self::TYPE_NULLS,
+            is_string($var) => self::TYPE_STRINGS,
+            is_bool($var) => self::TYPE_BOOLEANS,
+            is_numeric($var) => self::TYPE_NUMERIC,
+            default => self::TYPE_UNDEFINED,
+        };
     }
 
     /**

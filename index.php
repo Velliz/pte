@@ -1,8 +1,11 @@
 <?php
+
+declare(strict_types=1);
+
 /**
  * PTE - Puko Templating Engine
  * Example Usage File
- * 
+ *
  * This file demonstrates how to use PTE with various features:
  * - Master pages
  * - Loop iteration
@@ -15,7 +18,7 @@
 // AUTOLOADER
 // ============================================================================
 
-require_once 'vendor/autoload.php';
+require_once __DIR__ . '/vendor/autoload.php';
 
 use pte\CustomRender;
 use pte\exception\PteException;
@@ -28,10 +31,10 @@ use pte\Pte;
 
 /**
  * Base Custom Renderer
- * 
+ *
  * Implements CustomRender interface to provide custom parsing functions
  * that can be used within templates.
- * 
+ *
  * Available functions:
  * - {!url(path)}     : Generates full URL with base domain
  * - {!lang(key)}     : Loads translation from JSON file
@@ -40,61 +43,64 @@ class Base implements CustomRender
 {
     /** @var string|null Tag name being processed */
     public $tags;
-    
+
     /** @var string|null Function name called in template */
     public $fnName;
-    
+
     /** @var mixed */
     protected $assets;
-    
+
     /** @var array|null Data passed to the function */
     protected $data;
-    
+
     /** @var array|null Parameters passed to the function */
     protected $paramArray;
 
     /**
      * Parse function handler
-     * 
+     *
      * Called when a custom function tag is encountered in the template.
-     * 
+     *
      * @param mixed  $data              Data passed to the function (from template or SetValue)
      * @param string $template          Current template file path
      * @param bool   $templateBinary     Whether template is binary/string
      * @return string                   Processed output
      */
-    public function Parse($data = null, $template = '', $templateBinary = false)
+    public function Parse(mixed $data = null, string $template = '', bool $templateBinary = false)
     {
         // URL builder function: {!url(path)}
         if ($this->fnName === 'url') {
             return 'localhost' . $this->paramArray;
         }
-        
+
         // Language translation function: {!lang(key)}
         if ($this->fnName === 'lang') {
             if ($data !== null && !$templateBinary) {
                 // Try to load translation from JSON file (view.json)
                 $resource = str_replace('.html', '.json', $template);
                 if (file_exists($resource)) {
-                    $translations = json_decode(file_get_contents($resource), true);
-                    return isset($translations[$data]) ? $translations[$data] : $data;
+                    $content = file_get_contents($resource);
+                    $translations = is_string($content) ? json_decode($content, true) : null;
+                    if (is_array($translations)) {
+                        return $translations[$data] ?? $data;
+                    }
                 }
             }
         }
-        
+
         return '';
     }
 
     /**
      * Register function name and parameters
-     * 
+     *
      * Called by PTE before Parse() to set the function context.
-     * 
-     * @param string $fnName     Function name from template (e.g., 'url')
-     * @param mixed  $paramArray  Parameters passed to the function
+     *
+     * @param mixed $fnName     Function name from template (e.g., 'url')
+     * @param mixed $paramArray  Parameters passed to the function
      * @return void
      */
-    public function RegisterFunction($fnName, $paramArray)
+    public function RegisterFunction(mixed $fnName, mixed $paramArray)
     {
         $this->fnName = $fnName;
         $this->paramArray = $paramArray;
@@ -102,11 +108,11 @@ class Base implements CustomRender
 
     /**
      * Register assets (CSS/JS)
-     * 
+     *
      * @param mixed $assets
      * @return void
      */
-    public function RegisterAssets($assets)
+    public function RegisterAssets(mixed $assets)
     {
         $this->assets = $assets;
     }
@@ -118,7 +124,7 @@ class Base implements CustomRender
 
 /**
  * Sidebar Component
- * 
+ *
  * Example of a reusable Part object that can be embedded in templates.
  * Part objects allow you to create self-contained UI components.
  */
@@ -126,21 +132,20 @@ class Sidebar extends Parts
 {
     /**
      * Parse and render the sidebar component
-     * 
-     * @param array  $data              Data passed from parent template
+     *
+     * @param mixed  $data              Data passed from parent template
      * @param string $template          Template file path (unused here)
      * @param bool   $templateBinary    Whether template is binary
      * @return string                   Rendered HTML
-     * @throws PteException
      */
-    public function Parse($data = null, $template = '', $templateBinary = false)
+    public function Parse(mixed $data = null, string $template = '', bool $templateBinary = false)
     {
         // Set the template for this component
         $this->pte->SetHtml('template/sidebar.html');
-        
+
         // Pass component-specific data
         $this->pte->SetValue($this->data);
-        
+
         // Render and return the component HTML
         return $this->pte->Output(null, Pte::VIEW_HTML);
     }
@@ -152,7 +157,7 @@ class Sidebar extends Parts
 
 /**
  * Initialize PTE
- * 
+ *
  * Constructor parameters:
  * - $cacheDriver: PteCache instance for caching, or false to disable
  * - $UseMaster:   true to enable master page layout
@@ -176,7 +181,7 @@ $pte->SetHtml('template/view.html');
 
 /**
  * Data to be rendered in the template
- * 
+ *
  * This data can include:
  * - Simple values (strings, numbers, booleans)
  * - Arrays for loops
@@ -186,15 +191,15 @@ $pte->SetValue([
     // Application info
     'version'       => '1.6.0',
     'appName'       => 'PTE Demo Application',
-    
+
     // Simple string values
     'FirstCircle'  => 'Welcome to PTE!',
     'Author'       => 'John Developer',
     'AuthorEmail'  => 'john@example.com',
-    
+
     // Numeric value
     'Age'           => 28,
-    
+
     // Nested array with multiple loop levels
     'WishList'      => [
         [
@@ -214,12 +219,12 @@ $pte->SetValue([
             ],
         ],
     ],
-    
+
     // Single associative array (renders once)
     'Wishlist2' => [
         'val' => 'From Controller Data',
     ],
-    
+
     // Array of objects (team members)
     'TeamMembers' => [
         [
@@ -241,10 +246,10 @@ $pte->SetValue([
             ],
         ],
     ],
-    
+
     // Music genre example
     'MusicGenre' => 'Electronic',
-    
+
     // Part Object (reusable component)
     'sidebar' => new Sidebar('sidebar', [
         'Title'    => 'Quick Links',
@@ -262,7 +267,7 @@ $pte->SetValue([
 
 /**
  * Render the template
- * 
+ *
  * Parameters:
  * - $customRender: CustomRender instance for custom functions (or null)
  * - $outputType:    Output format (VIEW_HTML, VIEW_JSON, VIEW_XML, etc.)

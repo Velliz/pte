@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace pte;
 
 /**
@@ -15,31 +17,51 @@ namespace pte;
 abstract class Parts implements CustomRender
 {
 
-    var $tags;
-    var $fnName;
+    /**
+     * @var string|false
+     * Match tag name in view
+     */
+    public $tags;
 
+    /**
+     * @var string|false
+     * Function name called from the template
+     */
+    public $fnName;
+
+    /**
+     * @var mixed
+     */
     protected $assets;
+
+    /**
+     * @var mixed
+     */
     protected $data;
+
+    /**
+     * @var mixed
+     */
     protected $paramArray;
 
     /**
      * @var Pte
      */
-    var $pte;
+    public $pte;
 
     /**
      * Elements constructor.
      *
-     * @param $tags
+     * @param string $tags
      * match tag name in view
-     * @param $data
+     * @param array $data
      * extra data to render in parts
      *
-     * @param bool $cache
-     * @param bool $master
-     * @param bool $html
+     * @param PteCache|bool|null $cache
+     * @param bool|null $master
+     * @param bool|null $html
      */
-    public function __construct($tags, $data = array(), $cache = true, $master = false, $html = true)
+    public function __construct(string $tags, array $data = [], PteCache|bool|null $cache = true, ?bool $master = false, ?bool $html = true)
     {
         $this->pte = new Pte($cache, $master, $html);
         $this->tags = $tags;
@@ -47,14 +69,14 @@ abstract class Parts implements CustomRender
     }
 
     /**
-     * @param $fnName
+     * @param mixed $fnName
      * usually have same name as $tags
-     * @param $paramArray
+     * @param mixed $paramArray
      * input parameter from templates
      *
      * this function executed for pre process the custom definition before Parse is executed
      */
-    public function RegisterFunction($fnName, $paramArray)
+    public function RegisterFunction(mixed $fnName, mixed $paramArray)
     {
         $this->fnName = $fnName;
         $this->paramArray = $paramArray;

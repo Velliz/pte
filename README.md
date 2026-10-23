@@ -11,12 +11,15 @@ A lightweight, high-performance PHP templating engine designed for standalone us
 - **Partial Views** - Include external template segments
 - **Asset Management** - Automatic CSS/JS aggregation
 - **Multiple Output Formats** - HTML, JSON, XML support
+- **No extension dependencies** - XML output works without `ext-xmlrpc`
 
 ## Requirements
 
-- PHP 5.6+
+- PHP 8.0+ (tested on PHP 8.0 up to and including PHP 8.5)
 - Composer
-- PHP Extensions: `ext-json`, `ext-xmlrpc`
+- PHP Extensions: `ext-json` (bundled with PHP since 8.0)
+
+> **Upgrading from 0.2.x?** See [Migrating to PHP 8](#migrating-to-php-8) below.
 
 ## Installation
 
@@ -77,7 +80,7 @@ echo $pte->Output();
 ```php
 class Assets implements \pte\CustomRender
 {
-    public function Parse($data = null, $template = '', $templateBinary = false)
+    public function Parse(mixed $data = null, string $template = '', bool $templateBinary = false)
     {
         if ($this->fn === 'cdn') {
             return 'https://cdn.example.com/' . $this->param;
@@ -85,7 +88,7 @@ class Assets implements \pte\CustomRender
         return '';
     }
 
-    public function RegisterFunction($fnName, $paramArray)
+    public function RegisterFunction(mixed $fnName, mixed $paramArray)
     {
         $this->fn = $fnName;
         $this->param = $paramArray;
@@ -103,7 +106,7 @@ use pte\Parts;
 
 class Sidebar extends Parts
 {
-    public function Parse($data = null, $template = '', $templateBinary = false)
+    public function Parse(mixed $data = null, string $template = '', bool $templateBinary = false)
     {
         $this->pte->SetHtml('template/sidebar.html');
         $this->pte->SetValue($this->data);
@@ -149,7 +152,7 @@ $pte->Output(null, Pte::VIEW_JSON);
 // JSON with numeric strings
 $pte->Output(null, Pte::VIEW_JSON_NUMERIC);
 
-// XML
+// XML (XML-RPC)
 $pte->Output(null, Pte::VIEW_XML);
 ```
 
@@ -157,7 +160,7 @@ $pte->Output(null, Pte::VIEW_XML);
 
 | Parameter | Type | Description |
 |-----------|------|-------------|
-| `$cacheDriver` | `PteCache\|bool` | Cache driver instance or `false` to disable |
+| `$cacheDriver` | `PteCache\|bool\|null` | Cache driver instance or `false` to disable |
 | `$UseMaster` | `bool` | Enable master page support |
 | `$UseBody` | `bool` | Enable body template parsing |
 
@@ -185,6 +188,55 @@ project/
 └── vendor/
     └── velliz/pte/
 ```
+
+## Migrating to PHP 8
+
+Version 0.3.0 makes PTE run on PHP 8.0 up to and including PHP 8.5. The public API
+(method names, argument order and public properties) is unchanged, so most
+applications only need to update the `composer.json` requirement.
+
+What changed:
+
+- **PHP 8.0+ is required.** The package now declares `"php": ">=8.0"`.
+- **`ext-xmlrpc` is no longer needed.** The extension was removed from the PHP
+  core in 8.0 and only exists as a PECL extension, which made
+  `Pte::RenderXml()` a fatal error. XML output is now produced by the bundled
+  `pte\utility\XmlRpcEncoder`.
+- **No deprecations left.** The non canonical `(double)` cast was replaced by
+  `(float)` (deprecated in PHP 8.5), `var` was replaced by explicit visibility,
+  and every file declares `strict_types`.
+- **Headers are only sent when possible.** `header()` is now skipped once the
+  output has started, so the "Cannot modify header information" warning is gone.
+
+Behaviour fixes that came along with the upgrade:
+
+- `PteException::getMessage()` and `getCode()` now return the error instead of
+  an empty string, and `getMessage()` is no longer swallowed by `__toString()`.
+- Template and segment contents are inserted literally. `$1`, `\1` and other
+  back reference sequences in a template are no longer mangled.
+- `Fruits::GetName()` returns the file name (`view`) instead of the path
+  (`template/view`).
+- `Pte::Output()` can be called more than once on the same instance without the
+  output of the previous call leaking into the next one.
+- `Pte::GetTempCss()` and `Pte::GetTempJs()` return the collected assets
+  instead of the whole rendered page.
+- Undefined array key warnings are gone, including for tags without a body.
+
+If you extend the library, note that return types were deliberately **not**
+added to public and protected methods, so existing subclasses keep working.
+Parameter types were added where it is safe to do so: an override may always
+use a wider (or no) parameter type.
+
+## Testing
+
+```bash
+php tests/smoke.php
+# or
+composer test
+```
+
+The suite turns every notice, warning and deprecation into a failure, which
+makes it a regression guard for the PHP 8.x compatibility of the library.
 
 ## Performance
 

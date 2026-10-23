@@ -3,16 +3,23 @@
   "description": "puko template engine",
   "type": "library",
   "license": "MIT",
-  "version": "0.2.4",
+  "version": "0.3.0",
   "authors": [
     {
       "name": "didit velliz",
       "email": "diditvelliz@gmail.com"
     }
   ],
+  "require": {
+    "php": ">=8.0",
+    "ext-json": "*"
+  },
   "autoload": {
     "psr-4": {
       "pte\\": "lib/"
     }
+  },
+  "scripts": {
+    "test": "php tests/smoke.php"
   }
 }
